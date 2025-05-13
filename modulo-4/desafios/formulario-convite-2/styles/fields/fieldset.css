@@ -1,0 +1,58 @@
+.customize {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+
+ .article-wrapper {
+  gap: .5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.375rem, 1fr));
+
+  article{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    background-color: var(--shape-button);
+    padding: .25rem .25rem .5rem ;
+    border-radius: .5rem;
+    text-align: center;
+    color: var(--text-heading);
+    font: var(--text);
+    position: relative;
+
+    img {
+      object-fit: cover;
+      border-radius: .25rem;
+    }
+
+    &:hover,
+    &:focus-within, 
+    &:focus {
+      border: 3px solid var(--brand-light);
+      cursor: pointer;
+      background-color: var(--shape-hover)
+  }
+
+  & input {
+    all: unset;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+ }
+
+
+}
+ }
+
+ .contact {
+  padding-bottom: 3rem;
+   border-bottom: 1px solid var(--input-stroke);
+  
+  & .info-contact {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+ }

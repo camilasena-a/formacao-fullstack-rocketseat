@@ -1,0 +1,28 @@
+.action-wrapper {
+  display: flex;
+  justify-content:end ;
+  & button {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .875rem 1.25rem;
+    background-color: var(--brand-dark);
+    font: var(--text);
+    color: var(--text-heading);
+    border:none ;
+    border-radius: .5rem;
+
+    &:hover, &:focus-within {
+      background-color: var(--brand-mid);
+      cursor: pointer;
+    }
+  }
+}
+
+.button-wrapper {
+  appearance: none;
+  width: 100%;
+  border-radius: .5rem;
+  border: 1px solid var(--input-stroke);
+  background-color: var(--input-base);  
+ }

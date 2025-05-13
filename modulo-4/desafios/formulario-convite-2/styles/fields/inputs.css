@@ -1,0 +1,47 @@
+input, textarea, select {
+  appearance: none;
+  height: 48px;
+  width: 100%;
+  border-radius: .5rem;
+  border: 1px solid var(--input-stroke);
+  background-color: var(--input-base);
+  padding: .75rem 1rem;
+  font: var(--text-input);
+  color: var(--text-body);
+
+  &::placeholder {
+    color: var(--input-placeholder);
+  }
+}
+
+label {
+  font: var(--body-sm);
+  color: var(--text-body);
+  display: block;
+  margin-bottom: .25rem;
+}
+
+input, textarea {
+  &:focus, &:focus-within, &:hover {
+    border: 1px solid var(--brand-light);
+  }
+
+  &[required] + .error {
+   
+    display: flex;
+    color: var(--danger);
+    font: var(--text-xs);
+    
+    margin-top: .5rem;
+    gap: .5rem;
+  }
+
+  &:invalid {
+   border:1px solid var(--danger) ;
+  }
+ 
+  &:not(:focus):valid + .error {
+    display: none;
+  }
+  
+}

@@ -1,0 +1,71 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --brand-light: #59B2FF;
+  --brand-mid: #3487CF;
+  --brand-dark: #1D6FB6;
+  --color-purple: #B259FF;
+  --color-fuschia: #FF59F9;
+  --color-pink: #FF598B;
+  --color-orange: #FF8B59;
+  --color-yellow: #FFCD59;
+  --color-lime: #E1FF59;
+  --color-green: #59FF91;
+  --color-cyan: #59FFF9;
+  --color-navy: #6A59FF;
+  --danger: #FF5959;
+  --input-base: #1C1F21;
+  --input-stroke: #363B40;
+  --input-placeholder: #869198;
+  --shape-background: #131516;
+  --shape-body: #212427;
+  --shape-button: #2D3136;
+  --shape-hover: #383D42;
+  --text-body: #C8CDD0;
+  --text-heading: #F9F9F9;
+  --font-leckerli: "Leckerli One", cursive;
+  --font-baloo: "Baloo 2", sans-serif;
+  --font-open:  "Open Sans", sans-serif;
+  --logo: 400 40px var(--font-leckerli);
+  --heading-md: bold 28px/auto var(--font-baloo);
+  --heading-sm: bold 18px/20px var(--font-baloo);
+  --body-md: 500 1rem/auto var(--font-open);
+  --body-sm: 500 14px/19px var(--font-open);
+  --body-xs: 500 12px/auto var(--font-open);
+  --text-input: 400 1rem/22px var(--font-open);
+}
+
+body {
+  overflow: hidden;
+}
+
+h1 {
+  font-family: var(--font-baloo);
+  color: var(--text-heading);
+}
+
+.flex {
+  display: flex;
+  
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.gap-1 {
+  gap: 1rem;
+}
+
+.grid {
+  display: grid;
+  row-gap: 1rem;
+}

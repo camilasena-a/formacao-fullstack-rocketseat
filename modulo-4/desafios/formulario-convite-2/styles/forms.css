@@ -1,0 +1,40 @@
+@import url(fields/index.css);
+
+form {
+    margin-top: 40px;
+    color: var(--text-heading);
+}
+
+fieldset {
+    border: none;
+    display: grid;
+    gap: 1rem;
+    legend {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-heading);
+        font: var(--heading-sm);
+        margin-bottom: 24px;
+    }
+}
+
+fieldset + fieldset {
+    margin-top: 3rem;
+  }
+
+.input-wrapper {
+    display: grid;
+    gap: 12px;
+}
+
+.input-duo-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 18px;
+}
+
+.input-duo-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+}

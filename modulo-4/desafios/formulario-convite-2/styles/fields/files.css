@@ -1,0 +1,79 @@
+.button-file {
+  display: flex;
+  align-items: center;
+}
+
+.filezone {
+  padding-left: 3rem;
+  
+ 
+ .file-wrapper {
+  
+   gap: .75rem;
+   position: relative;
+
+   width: 22rem;
+  
+   
+   .file-inner {
+  
+     display: flex;
+     align-items: center;
+     gap: .9rem;
+     margin-top: .5rem;
+     padding: .75rem ;
+     width: 7.5rem;
+     height: 2.5rem;
+     color: var(--text-heading);
+     font: var(--text);
+     position: relative;
+     background-color: var(--shape-button);
+     border-radius: .5rem;
+     
+     
+      &:hover {
+        cursor: pointer;
+        
+      }
+
+     
+      input::file-selector-button {   
+        position: absolute;
+        left: .1rem;
+        top: .1rem;
+        width: 7rem;
+        height: 90%;
+        cursor: pointer;
+        opacity: 0;
+        z-index:0;
+      }
+
+      .error {
+        position: absolute;
+        top: 2.5rem;
+        left: .1rem;
+        width: 10.5rem;
+      }
+      
+      
+    }
+
+  }
+ 
+  & input {
+    all: unset;    
+    font: var(--text-md);
+    color: var(--input-placeholder);
+     width: 12.6rem;
+    &:hover {
+      cursor: pointer;
+    }
+
+   
+}
+
+
+  }
+ 
+
+

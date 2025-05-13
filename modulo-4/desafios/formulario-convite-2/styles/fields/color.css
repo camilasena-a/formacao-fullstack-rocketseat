@@ -1,0 +1,39 @@
+.color-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(2.5rem, 1fr));
+  gap: .75rem;
+  
+.color-inner {
+  border-radius: 50%;
+  & input {
+    all: unset;
+    width: 2.5rem;
+    height: 2.5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: var(--shape-button);
+    cursor: pointer;
+    border-radius: 50%;
+    padding: .265rem;
+    
+    &:hover,
+    &:focus-within, 
+    &:focus {
+      border: 3px solid var(--brand-light);
+      cursor: pointer;
+  }
+    
+    &::-webkit-color-swatch {
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      border: 1px solid var(--shape-button) ;
+    }
+    &::-moz-color-swatch {
+      border-radius: 50%;
+    }
+
+  }
+
+}
+}

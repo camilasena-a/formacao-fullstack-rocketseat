@@ -1,0 +1,56 @@
+#app {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--shape-background);
+}
+
+main {
+  flex: 50%;
+  background-color: var(--shape-background);
+  overflow: auto;
+  padding: 165px 130px;
+
+  & #main-container {
+    margin-right: auto;
+    width: 100%;
+  }
+}
+
+aside {
+  overflow: hidden;
+  & #aside-container {
+  margin-left: auto;
+  padding: 2rem;
+    height: 100vh;
+    background: url(../assets/Background.png) no-repeat;
+    background-size: cover;
+    max-width: 31rem;
+    width: 100%;
+   position: relative;
+
+  & header {
+    position: sticky;
+    top: 0;
+    max-width: 21rem;
+    & img {
+      height: 48px;
+      width: 46px;
+      margin-bottom: 1rem;
+    }
+
+    & h1 {
+      color: var(--color-pink);
+      font: var(--logo);
+      margin-bottom: 4px;
+    }
+
+    & p {
+      color: var(--text-body);
+      font: var(--body-md);
+    }
+  }
+  }
+}
