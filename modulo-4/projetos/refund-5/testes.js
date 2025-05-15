@@ -1,4 +1,5 @@
 const listaItens = document.querySelector("ul")
+const contadorDespesas = document.querySelector("aside header p span")
 
 // configurando amount
 
@@ -39,6 +40,7 @@ function formatCurrencyBRL(valor) {
   }
 
   adicionaDespesa(novaDespesa)
+  atualizaContagem(listaItens)
  })
 
  function adicionaDespesa(novaDespesa) {
@@ -80,4 +82,14 @@ function formatCurrencyBRL(valor) {
       console.log(error)
     }
 
+ }
+
+ function atualizaContagem(lista){
+  try {
+    const quantidade = lista.children.length
+    contadorDespesas.textContent = `${quantidade} ${quantidade>1 ? "despesas":"despesa"}`
+  } catch (error) {
+    alert("Não foi possível atualizar a contagem de despesas")
+      console.log(error)
+  }
  }
