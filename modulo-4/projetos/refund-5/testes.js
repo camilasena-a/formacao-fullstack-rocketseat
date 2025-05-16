@@ -1,5 +1,6 @@
 const listaItens = document.querySelector("ul")
 const contadorDespesas = document.querySelector("aside header p span")
+const totalDespesas = document.querySelector("aside header h2")
 
 // configurando amount
 
@@ -41,6 +42,7 @@ function formatCurrencyBRL(valor) {
 
   adicionaDespesa(novaDespesa)
   atualizaContagem(listaItens)
+  formClear()
  })
 
  function adicionaDespesa(novaDespesa) {
@@ -88,8 +90,42 @@ function formatCurrencyBRL(valor) {
   try {
     const quantidade = lista.children.length
     contadorDespesas.textContent = `${quantidade} ${quantidade>1 ? "despesas":"despesa"}`
+
+    total = 0;
+
+    for (let i = 0; i < quantidade; i++) {
+      const valorItem = lista.children[i].querySelector(".expense-amount");
+      valorParcela = valorItem.textContent.replace(/[^\d,]/g, "").replace(",",".")
+      valorParcela = parseFloat(valorParcela)
+
+      if(isNaN(valorParcela)) {
+        return alert ("Não foi possivel calcular o total, o valor não parece ser um numero")
+      }
+
+      total += Number(valorParcela)
+    }
+
+    totalDespesas.innerHTML = `<small>R$</small>${total}`
+
   } catch (error) {
     alert("Não foi possível atualizar a contagem de despesas")
       console.log(error)
   }
+ }
+
+ // apaga item
+
+ listaItens.addEventListener("click", (event) => {
+    if(event.target.classList.contains("remove-icon")){
+      //obter a li pai do icon
+      const itemRemovido = event.target.closest(".expense")
+      itemRemovido.remove()
+      atualizaContagem(listaItens)
+    }
+ })
+
+ function formClear() {
+  valorDespesa.value = ""
+  despesa.value = ""
+  categoria.value = ""
  }
