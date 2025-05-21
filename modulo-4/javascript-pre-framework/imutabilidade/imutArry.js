@@ -18,3 +18,10 @@ console.log(original,copia2)
 
 const copia3 = [...original, "Salem"]
 console.log(original, copia3)
+
+
+// outra forma de fazer uma cópia seria pelo uso do map
+
+let copia4 = original.map(item => item = `c${item}`)
+
+console.log(original, copia4)
