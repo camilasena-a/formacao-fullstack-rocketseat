@@ -19,3 +19,9 @@ async function novaFuncao() {
   const response = await asyncExemplo()
   console.log(response)
 }
+
+/* usando como arrow function
+
+const novaFuncao = async () => {}
+
+  */
