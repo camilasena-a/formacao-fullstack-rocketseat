@@ -103,4 +103,63 @@ button:hover {
     margin-top: 10px;
     min-height: 20px;
     background-color: #f9f9f9;
+}
+
+/* Estilo para blocos importantes/avisos */
+.important {
+    background-color: #fffbea;
+    border: 1px solid #f1c40f;
+    border-left: 5px solid #f1c40f;
+    border-radius: 4px;
+    padding: 15px 20px;
+    margin: 20px 0;
+    position: relative;
+}
+
+.important::before {
+    content: "⚠️ IMPORTANTE";
+    display: block;
+    font-weight: bold;
+    color: #e67e22;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.important p {
+    margin-top: 0;
+}
+
+.important .example {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-color: #f1c40f;
+}
+
+/* Estilos para tabelas */
+table {
+    margin: 25px auto;
+    border-collapse: collapse;
+    width: 90%;
+    max-width: 600px;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #e9f7fe;
 } 

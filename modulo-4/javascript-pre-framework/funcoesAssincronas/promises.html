@@ -41,10 +41,74 @@
     }
 });</code></pre>
         </div>
-         <ul>
-            <li><strong>resolve</strong>: chamamos quando <strong>deu tudo certo</strong></li>
-            <li><strong>reject</strong>: chamamos quando <strong>deu algum erro</strong></li>
-        </ul>
+    </section>
+
+<section>
+        <h2>Parâmetros resolve() e reject()</h2>
+        <p>
+           <code>resolve()</code> é uma função que é chamada quando tudo deu certo, quando ela é chamada, a Promise muda de estado de <strong>pending</strong> para <strong>fulfilled</strong> e o valor passado para o resolve() será enviado para o próximo <code>then()</code> ou retornado com <code>await</code>.
+        </p>
+
+        <p> 
+            <code>reject()</code> é uma função que é chamada quando algo deu errado, quando ela é chamada, a Promise muda de estado de <strong>pending</strong> para <strong>rejected</strong> e o valor passado é enviado para o <code>catch()</code> ou para o bloco <code>try/catch</code> se você estiver usando <code>async/await</code>.
+        </p>
+
+        <p>Podemos passar qualquer valor como parâmetro para resolve e reject:</p>
+        
+        <table border="1">
+            <thead>
+                <tr>
+                <th>Tipo de valor</th>
+                <th>Exemplo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>String</td>
+                <td>"Sucesso!"</td>
+                </tr>
+                <tr>
+                <td>Número</td>
+                <td>42</td>
+                </tr>
+                <tr>
+                <td>Booleano</td>
+                <td>true</td>
+                </tr>
+                <tr>
+                <td>Objeto</td>
+                <td>{ nome: "Ana", idade: 25 }</td>
+                </tr>
+                <tr>
+                <td>Array</td>
+                <td>[1, 2, 3]</td>
+                </tr>
+                <tr>
+                <td>Outro Promise</td>
+                <td>Promise.resolve('Oi')</td>
+                </tr>
+                <tr>
+                <td>undefined ou null</td>
+                <td>undefined, null</td>
+                </tr>
+                <tr>
+                <td>Função</td>
+                <td>() => console.log('Oi')</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="important">
+            <p>
+                Embora você possa passar qualquer coisa para reject, a prática recomendada é passar um objeto Error (ou algo semelhante), porque isso facilita o rastreamento do erro.
+            </p>
+            <div class="example">
+                <code>
+                    reject(new Error('Ocorreu um erro ao buscar os dados'));
+                </code>
+            </div>
+        </div>
+
     </section>
 
     <section>

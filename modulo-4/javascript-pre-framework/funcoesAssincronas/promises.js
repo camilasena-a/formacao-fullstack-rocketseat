@@ -17,7 +17,7 @@ function asyncExemplo() {
 
 //visualizando retorno
 
-console.log(asyncExemplo()) //nao vamos conseguir pois esta pendente
+console.log(asyncExemplo()) //vemos que retorna promise, mas esta pendente
 
 asyncExemplo().then(
   (mensagem) => {console.log(`CONCLUIDO COM SUCESSO: ${mensagem}`)}
