@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial de Promises em JavaScript</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        code {
+            background-color: #282c34;
+            color: #e6e6e6;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        pre {
+            background-color: #282c34;
+            color: #e6e6e6;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            line-height: 1.4;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        /* Cores para a sintaxe JavaScript */
+        .keyword {
+            color: #c678dd; /* Palavras-chave como const, function, return */
+        }
+        .string {
+            color: #98c379; /* Strings */
+        }
+        .comment {
+            color: #7f848e; /* Comentários */
+            font-style: italic;
+        }
+        .function {
+            color: #61afef; /* Nomes de funções */
+        }
+        .method {
+            color: #56b6c2; /* Métodos como then, catch */
+        }
+        .number {
+            color: #d19a66; /* Números */
+        }
+        .variable {
+            color: #e06c75; /* Variáveis */
+        }
+        .object {
+            color: #e5c07b; /* Objetos */
+        }
+        .operator {
+            color: #56b6c2; /* Operadores como =>, =, + */
+        }
+        .example {
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .output {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            min-height: 20px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tutorial de Promises em JavaScript</h1>
+    
+    <section>
+        <h2>O que são Promises?</h2>
+        <p>
+            Promises são classes nativas do JavaScript.
+        </p>
+        <p>Uma Promise pode estar em um destes estados:</p>
+        <ul>
+            <li><strong>Pendente (pending)</strong>: estado inicial, nem cumprida nem rejeitada;</li>
+            <li><strong>Cumprida (fulfilled)</strong>: operação concluída com sucesso;</li>
+            <li><strong>Rejeitada (rejected)</strong>: operação falhou;</li>
+            <li><strong>Estabelecida (settled)</strong>: já foi cumprida ou rejeitada, não está mais pendente.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Criando uma Promise</h2>
+        <p>
+            Para criar uma Promise, usamos o construtor <code>Promise</code> com uma função que recebe dois parâmetros:
+            <code>resolve</code> e <code>reject</code>.
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">const</span> <span class="variable">minhaPromise</span> = <span class="keyword">new</span> <span class="function">Promise</span>((<span class="variable">resolve</span>, <span class="variable">reject</span>) <span class="operator">=></span> {
+    <span class="comment">// Operação assíncrona</span>
+    <span class="keyword">const</span> <span class="variable">sucesso</span> = <span class="keyword">true</span>;
+    
+    <span class="keyword">if</span> (<span class="variable">sucesso</span>) {
+        <span class="function">resolve</span>(<span class="string">'Operação concluída com sucesso!'</span>);
+    } <span class="keyword">else</span> {
+        <span class="function">reject</span>(<span class="string">'A operação falhou!'</span>);
+    }
+});</code></pre>
+        </div>
+         <ul>
+            <li><strong>resolve</strong>: chamamos quando <strong>deu tudo certo</strong></li>
+            <li><strong>reject</strong>: chamamos quando <strong>deu algum erro</strong></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Utilizando Promises</h2>
+        <p>
+            A classe Promisse tem métodos de instância <code>then()</code>, <code>.catch</code> e <code>.finally()</code>
+        </p>
+        <p>
+            O método <code>.then()</code> espera a Promise ser resolvida (ou seja, dar certo) e então executa uma função com o resultado, essa função recebe como parâmetro o valor passado no <code>.resolve()</code> da Promise.
+        </p>
+        <p>
+            O método <code>.catch()</code> é usado para tratar erros quando uma Promise é rejeitada com <code>reject()</code> e então executa uma função com o resultado do reject. O cacth é chamado sempre que reject() é chamada ou quando ocorre algum erro dentro do bloco da Promise.
+        </p>
+        <div class="example">
+            <pre><code><span class="variable">minhaPromise</span>
+    .<span class="method">then</span>(<span class="variable">resultado</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="variable">resultado</span>); <span class="comment">// 'Operação concluída com sucesso!'</span>
+    })
+    .<span class="method">catch</span>(<span class="variable">erro</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="variable">erro</span>); <span class="comment">// 'A operação falhou!'</span>
+    });</code></pre>
+        </div>
+
+        <p>
+            O método <code>.finally()</code> é executado independentemente se a Promise foi resolvida ou rejeitada:
+        </p>
+        <div class="example">
+            <pre><code><span class="variable">minhaPromise</span>
+    .<span class="method">then</span>(<span class="variable">resultado</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="variable">resultado</span>);
+    })
+    .<span class="method">catch</span>(<span class="variable">erro</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="variable">erro</span>);
+    })
+    .<span class="method">finally</span>(() <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Promise concluída (resolvida ou rejeitada)!'</span>);
+    });</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Exemplo Prático: Simulando uma Requisição</h2>
+        <p>Vamos simular uma requisição com tempo de espera usando <code>setTimeout</code>:</p>
+        <div class="example">
+            <pre><code><span class="keyword">function</span> <span class="function">buscarDados</span>(<span class="variable">id</span>) {
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Promise</span>((<span class="variable">resolve</span>, <span class="variable">reject</span>) <span class="operator">=></span> {
+        <span class="function">setTimeout</span>(() <span class="operator">=></span> {
+            <span class="keyword">if</span> (<span class="variable">id</span> <span class="operator">></span> <span class="number">0</span>) {
+                <span class="keyword">const</span> <span class="variable">usuario</span> = {
+                    <span class="variable">id</span>: <span class="variable">id</span>,
+                    <span class="variable">nome</span>: <span class="string">'Usuário '</span> <span class="operator">+</span> <span class="variable">id</span>,
+                    <span class="variable">email</span>: <span class="string">`usuario${id}@exemplo.com`</span>
+                };
+                <span class="function">resolve</span>(<span class="variable">usuario</span>);
+            } <span class="keyword">else</span> {
+                <span class="function">reject</span>(<span class="string">'ID inválido'</span>);
+            }
+        }, <span class="number">2000</span>); <span class="comment">// Simula 2 segundos de espera</span>
+    });
+}
+
+<span class="comment">// Teste a função</span>
+<span class="keyword">const</span> <span class="variable">idUsuario</span> = <span class="number">1</span>;
+<span class="function">buscarDados</span>(<span class="variable">idUsuario</span>)
+    .<span class="method">then</span>(<span class="variable">usuario</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Dados recebidos:'</span>, <span class="variable">usuario</span>);
+    })
+    .<span class="method">catch</span>(<span class="variable">erro</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="string">'Erro:'</span>, <span class="variable">erro</span>);
+    });</code></pre>
+        </div>
+
+        <div>
+            <button id="btnBuscar">Buscar Usuário 1</button>
+            <button id="btnBuscarErro">Buscar ID Inválido</button>
+            <div id="resultadoBusca" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Encadeamento de Promises</h2>
+        <p>
+            Podemos encadear várias operações assíncronas de forma elegante:
+        </p>
+        <div class="example">
+            <pre><code><span class="function">buscarDados</span>(<span class="number">1</span>)
+    .<span class="method">then</span>(<span class="variable">usuario</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Primeiro usuário:'</span>, <span class="variable">usuario</span>);
+        <span class="keyword">return</span> <span class="function">buscarDados</span>(<span class="number">2</span>); <span class="comment">// Retorna uma nova Promise</span>
+    })
+    .<span class="method">then</span>(<span class="variable">usuario</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Segundo usuário:'</span>, <span class="variable">usuario</span>);
+        <span class="keyword">return</span> <span class="function">buscarDados</span>(<span class="number">3</span>);
+    })
+    .<span class="method">then</span>(<span class="variable">usuario</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Terceiro usuário:'</span>, <span class="variable">usuario</span>);
+    })
+    .<span class="method">catch</span>(<span class="variable">erro</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="string">'Erro em qualquer uma das Promises:'</span>, <span class="variable">erro</span>);
+    });</code></pre>
+        </div>
+
+        <div>
+            <button id="btnEncadeamento">Executar Encadeamento</button>
+            <div id="resultadoEncadeamento" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Promise.all()</h2>
+        <p>
+            O método <code>Promise.all()</code> recebe um array de Promises e retorna uma nova Promise que é resolvida
+            quando todas as Promises do array são resolvidas, ou rejeitada assim que uma delas for rejeitada.
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">const</span> <span class="variable">promessa1</span> = <span class="function">buscarDados</span>(<span class="number">1</span>);
+<span class="keyword">const</span> <span class="variable">promessa2</span> = <span class="function">buscarDados</span>(<span class="number">2</span>);
+<span class="keyword">const</span> <span class="variable">promessa3</span> = <span class="function">buscarDados</span>(<span class="number">3</span>);
+
+<span class="object">Promise</span>.<span class="method">all</span>([<span class="variable">promessa1</span>, <span class="variable">promessa2</span>, <span class="variable">promessa3</span>])
+    .<span class="method">then</span>(<span class="variable">resultados</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Todos os usuários:'</span>, <span class="variable">resultados</span>);
+        <span class="comment">// resultados é um array com os valores resolvidos de cada Promise</span>
+    })
+    .<span class="method">catch</span>(<span class="variable">erro</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="string">'Pelo menos uma Promise foi rejeitada:'</span>, <span class="variable">erro</span>);
+    });</code></pre>
+        </div>
+
+        <div>
+            <button id="btnPromiseAll">Executar Promise.all()</button>
+            <div id="resultadoPromiseAll" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Promise.race()</h2>
+        <p>
+            O método <code>Promise.race()</code> também recebe um array de Promises, mas retorna uma Promise que é
+            resolvida ou rejeitada assim que a primeira Promise do array for resolvida ou rejeitada.
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">const</span> <span class="variable">promessaRapida</span> = <span class="keyword">new</span> <span class="function">Promise</span>(<span class="variable">resolve</span> <span class="operator">=></span> <span class="function">setTimeout</span>(() <span class="operator">=></span> <span class="function">resolve</span>(<span class="string">'Rápida'</span>), <span class="number">1000</span>));
+<span class="keyword">const</span> <span class="variable">promessaMedia</span> = <span class="keyword">new</span> <span class="function">Promise</span>(<span class="variable">resolve</span> <span class="operator">=></span> <span class="function">setTimeout</span>(() <span class="operator">=></span> <span class="function">resolve</span>(<span class="string">'Média'</span>), <span class="number">2000</span>));
+<span class="keyword">const</span> <span class="variable">promessaLenta</span> = <span class="keyword">new</span> <span class="function">Promise</span>(<span class="variable">resolve</span> <span class="operator">=></span> <span class="function">setTimeout</span>(() <span class="operator">=></span> <span class="function">resolve</span>(<span class="string">'Lenta'</span>), <span class="number">3000</span>));
+
+<span class="object">Promise</span>.<span class="method">race</span>([<span class="variable">promessaLenta</span>, <span class="variable">promessaMedia</span>, <span class="variable">promessaRapida</span>])
+    .<span class="method">then</span>(<span class="variable">resultado</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'A primeira a completar foi:'</span>, <span class="variable">resultado</span>);
+        <span class="comment">// Vai mostrar 'Rápida', pois essa Promise é resolvida primeiro</span>
+    });</code></pre>
+        </div>
+
+        <div>
+            <button id="btnPromiseRace">Executar Promise.race()</button>
+            <div id="resultadoPromiseRace" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>async/await</h2>
+        <p>
+            O ES2017 introduziu as palavras-chave <code>async</code> e <code>await</code>, que tornam o trabalho com Promises ainda mais fácil:
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">async</span> <span class="keyword">function</span> <span class="function">buscarTresUsuarios</span>() {
+    <span class="keyword">try</span> {
+        <span class="keyword">const</span> <span class="variable">usuario1</span> = <span class="keyword">await</span> <span class="function">buscarDados</span>(<span class="number">1</span>);
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Usuário 1:'</span>, <span class="variable">usuario1</span>);
+        
+        <span class="keyword">const</span> <span class="variable">usuario2</span> = <span class="keyword">await</span> <span class="function">buscarDados</span>(<span class="number">2</span>);
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Usuário 2:'</span>, <span class="variable">usuario2</span>);
+        
+        <span class="keyword">const</span> <span class="variable">usuario3</span> = <span class="keyword">await</span> <span class="function">buscarDados</span>(<span class="number">3</span>);
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Usuário 3:'</span>, <span class="variable">usuario3</span>);
+        
+        <span class="keyword">return</span> [<span class="variable">usuario1</span>, <span class="variable">usuario2</span>, <span class="variable">usuario3</span>];
+    } <span class="keyword">catch</span> (<span class="variable">erro</span>) {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="string">'Erro:'</span>, <span class="variable">erro</span>);
+        <span class="keyword">throw</span> <span class="variable">erro</span>;
+    }
+}
+
+<span class="comment">// Para chamar uma função async:</span>
+<span class="function">buscarTresUsuarios</span>()
+    .<span class="method">then</span>(<span class="variable">usuarios</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Todos os usuários:'</span>, <span class="variable">usuarios</span>);
+    })
+    .<span class="method">catch</span>(<span class="variable">erro</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="string">'Erro na função async:'</span>, <span class="variable">erro</span>);
+    });</code></pre>
+        </div>
+
+        <div>
+            <button id="btnAsync">Executar com async/await</button>
+            <div id="resultadoAsync" class="output"></div>
+        </div>
+    </section>
+
+    <script src="promises.js"></script>
+</body>
+</html>
