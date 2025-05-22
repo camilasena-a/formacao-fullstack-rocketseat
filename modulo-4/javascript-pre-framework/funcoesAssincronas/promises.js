@@ -9,7 +9,7 @@ function asyncExemplo() {
       if(isSuccess){
         resolve("Aqui a mensagem dentro de resolve")
       } else {
-        reject("Ops, aqui a mensagem dentro de reject!")
+        reject("Ops, aqui a mensagem dentro de reject!") //o ideal é passar um new Error()
       }
     },3000)
   })

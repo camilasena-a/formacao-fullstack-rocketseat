@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial do Event Loop em JavaScript</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Tutorial do Event Loop em JavaScript</h1>
+    
+    <section>
+        <h2>O que é o Event Loop?</h2>
+        <p>
+            O Event Loop é um mecanismo central do JavaScript que permite executar código assíncrono com uma única thread principal.
+        </p>
+        <p>
+            Apesar do JavaScript ser uma linguagem single-threaded (executa em uma única thread), ele consegue realizar operações assíncronas graças ao Event Loop.
+        </p>
+        <p>O Event Loop está continuamente verificando a pilha de chamadas (Call Stack) e a fila de tarefas (Task Queue), coordenando a execução do código.</p>
+    </section>
+
+    <section>
+        <h2>Componentes do Event Loop</h2>
+        <p>O Event Loop trabalha com três componentes principais:</p>
+        <ul>
+            <li><strong>Call Stack</strong>: a pilha de execução de funções do JavaScript;</li>
+            <li><strong>Callback Queue (Task Queue)</strong>: fila de funções de callback que aguardam para serem executadas;</li>
+            <li><strong>Web APIs</strong>: (no navegador) ou C++ APIs (no Node.js) que processam operações assíncronas fora da thread principal.</li>
+        </ul>
+        <div class="example">
+            <pre><code><span class="comment">// O Event Loop em ação</span>
+<span class="object">console</span>.<span class="method">log</span>(<span class="string">'Início'</span>);
+
+<span class="function">setTimeout</span>(() <span class="operator">=></span> {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Callback do setTimeout'</span>);
+}, <span class="number">0</span>);
+
+<span class="object">console</span>.<span class="method">log</span>(<span class="string">'Fim'</span>);
+
+<span class="comment">// Saída:
+// Início
+// Fim
+// Callback do setTimeout</span></code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>A Call Stack (Pilha de Chamadas)</h2>
+        <p>
+            A Call Stack é uma estrutura de dados do tipo pilha que rastreia onde o programa está na execução.
+            Quando chamamos uma função, ela é adicionada ao topo da pilha. Quando a função termina, ela é removida da pilha.
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">function</span> <span class="function">terceira</span>() {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Na função terceira'</span>);
+    <span class="comment">// Call Stack: main() -> primeira() -> segunda() -> terceira()</span>
+}
+
+<span class="keyword">function</span> <span class="function">segunda</span>() {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Na função segunda'</span>);
+    <span class="function">terceira</span>();
+    <span class="comment">// Call Stack: main() -> primeira() -> segunda()</span>
+}
+
+<span class="keyword">function</span> <span class="function">primeira</span>() {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Na função primeira'</span>);
+    <span class="function">segunda</span>();
+    <span class="comment">// Call Stack: main() -> primeira()</span>
+}
+
+<span class="function">primeira</span>();
+<span class="comment">// Call Stack: main()</span></code></pre>
+        </div>
+
+        <div>
+            <button id="btnCallStack">Executar exemplo da Call Stack</button>
+            <div id="resultadoCallStack" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Callback Queue (Fila de Callbacks)</h2>
+        <p>
+            A Callback Queue (ou Task Queue) é onde as funções de callback são colocadas depois que uma operação assíncrona é concluída.
+            O Event Loop verifica continuamente se a Call Stack está vazia e, quando está, move o primeiro callback da fila para a Call Stack.
+        </p>
+        <div class="example">
+            <pre><code><span class="object">console</span>.<span class="method">log</span>(<span class="string">'1. Código síncrono começa'</span>);
+
+<span class="function">setTimeout</span>(() <span class="operator">=></span> {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'4. Callback do setTimeout'</span>);
+}, <span class="number">0</span>);
+
+<span class="keyword">const</span> <span class="variable">promise</span> = <span class="keyword">new</span> <span class="function">Promise</span>((<span class="variable">resolve</span>) <span class="operator">=></span> {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'2. Promise executada'</span>);
+    <span class="function">resolve</span>();
+});
+
+<span class="variable">promise</span>.<span class="method">then</span>(() <span class="operator">=></span> {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'5. Callback do Promise (microtask)'</span>);
+});
+
+<span class="object">console</span>.<span class="method">log</span>(<span class="string">'3. Código síncrono termina'</span>);</code></pre>
+        </div>
+
+        <div>
+            <button id="btnTaskQueue">Executar exemplo da Fila de Callbacks</button>
+            <div id="resultadoTaskQueue" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Microtasks vs Macrotasks</h2>
+        <p>
+            O Event Loop gerencia dois tipos de tarefas:
+        </p>
+        <ul>
+            <li><strong>Macrotasks</strong>: setTimeout, setInterval, I/O, eventos de UI, etc.</li>
+            <li><strong>Microtasks</strong>: Promises, MutationObserver, queueMicrotask(), etc.</li>
+        </ul>
+        <p>
+            As microtasks têm prioridade sobre as macrotasks. Depois que uma macrotask é executada, todas as microtasks pendentes são executadas antes da próxima macrotask.
+        </p>
+        <div class="example">
+            <pre><code><span class="object">console</span>.<span class="method">log</span>(<span class="string">'1. Script inicia'</span>);
+
+<span class="function">setTimeout</span>(() <span class="operator">=></span> {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'6. Macrotask: setTimeout 1'</span>);
+    
+    <span class="keyword">new</span> <span class="function">Promise</span>((<span class="variable">resolve</span>) <span class="operator">=></span> <span class="function">resolve</span>())
+        .<span class="method">then</span>(() <span class="operator">=></span> <span class="object">console</span>.<span class="method">log</span>(<span class="string">'7. Microtask dentro da Macrotask'</span>));
+    
+    <span class="function">setTimeout</span>(() <span class="operator">=></span> <span class="object">console</span>.<span class="method">log</span>(<span class="string">'8. Macrotask aninhada'</span>), <span class="number">0</span>);
+}, <span class="number">0</span>);
+
+<span class="keyword">new</span> <span class="function">Promise</span>((<span class="variable">resolve</span>) <span class="operator">=></span> {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'2. Promise criada'</span>);
+    <span class="function">resolve</span>();
+}).<span class="method">then</span>(() <span class="operator">=></span> {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'4. Microtask 1'</span>);
+    <span class="function">queueMicrotask</span>(() <span class="operator">=></span> <span class="object">console</span>.<span class="method">log</span>(<span class="string">'5. Microtask 2'</span>));
+});
+
+<span class="object">console</span>.<span class="method">log</span>(<span class="string">'3. Script termina'</span>);</code></pre>
+        </div>
+
+        <div>
+            <button id="btnMicroMacro">Executar exemplo Micro/Macrotasks</button>
+            <div id="resultadoMicroMacro" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Bloqueando o Event Loop</h2>
+        <p>
+            Como JavaScript é single-threaded, operações síncronas longas podem bloquear o Event Loop, travando a interface do usuário.
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">function</span> <span class="function">operacaoPesada</span>() {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Iniciando operação pesada...'</span>);
+    <span class="keyword">const</span> <span class="variable">inicio</span> = <span class="function">Date</span>.<span class="method">now</span>();
+    
+    <span class="comment">// Operação síncrona que bloqueia a thread principal</span>
+    <span class="keyword">for</span> (<span class="keyword">let</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> < <span class="number">5000000000</span>; <span class="variable">i</span>++) {
+        <span class="comment">// Loop que consome CPU</span>
+    }
+    
+    <span class="keyword">const</span> <span class="variable">duracao</span> = <span class="function">Date</span>.<span class="method">now</span>() - <span class="variable">inicio</span>;
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">`Operação pesada concluída em ${duracao}ms`</span>);
+}
+
+<span class="object">console</span>.<span class="method">log</span>(<span class="string">'Antes da operação pesada'</span>);
+<span class="function">setTimeout</span>(() <span class="operator">=></span> <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Este setTimeout deveria executar em 0ms'</span>), <span class="number">0</span>);
+
+<span class="comment">// Esta operação bloqueia o Event Loop</span>
+<span class="function">operacaoPesada</span>();
+
+<span class="object">console</span>.<span class="method">log</span>(<span class="string">'Depois da operação pesada'</span>);</code></pre>
+        </div>
+
+        <div>
+            <button id="btnBloqueio">Executar (pode congelar a UI)</button>
+            <button id="btnBloqueioSeguro">Versão Segura</button>
+            <div id="resultadoBloqueio" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Visualização do Event Loop</h2>
+        <p>
+            Aqui está uma visualização simplificada de como o Event Loop funciona:
+        </p>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <div style="border: 2px solid #3498db; padding: 10px; width: 90%; max-width: 600px; margin: 0 auto; border-radius: 5px;">
+                <div style="font-weight: bold; background-color: #3498db; color: white; padding: 5px; margin-bottom: 10px; border-radius: 3px;">Event Loop</div>
+                
+                <div style="display: flex; justify-content: space-between;">
+                    <div style="flex: 1; border: 1px solid #e74c3c; padding: 10px; margin-right: 10px; background-color: #fadbd8; border-radius: 3px;">
+                        <div style="font-weight: bold; margin-bottom: 5px;">Call Stack</div>
+                        <div id="callStackVis" style="min-height: 100px; display: flex; flex-direction: column-reverse;">
+                            <div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">main()</div>
+                        </div>
+                    </div>
+                    
+                    <div style="flex: 1; border: 1px solid #27ae60; padding: 10px; background-color: #eafaf1; border-radius: 3px;">
+                        <div style="font-weight: bold; margin-bottom: 5px;">Callback Queue</div>
+                        <div id="callbackQueueVis" style="min-height: 50px;"></div>
+                        
+                        <div style="font-weight: bold; margin: 10px 0 5px 0;">Microtask Queue</div>
+                        <div id="microtaskQueueVis" style="min-height: 50px;"></div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px; border: 1px solid #f39c12; padding: 10px; background-color: #fef9e7; border-radius: 3px;">
+                    <div style="font-weight: bold; margin-bottom: 5px;">Web APIs / Node.js APIs</div>
+                    <div id="webApiVis" style="min-height: 50px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <button id="btnVisualizacao">Iniciar Visualização</button>
+            <button id="btnResetVis">Resetar</button>
+        </div>
+    </section>
+
+    <section>
+        <h2>O Event Loop no Node.js</h2>
+        <p>
+            O Event Loop no Node.js é similar ao dos navegadores, mas tem algumas fases adicionais:
+        </p>
+        <ol>
+            <li><strong>timers</strong>: executa callbacks agendados por setTimeout() e setInterval()</li>
+            <li><strong>pending callbacks</strong>: executa callbacks de operações de I/O adiadas para a próxima iteração</li>
+            <li><strong>idle, prepare</strong>: usado internamente</li>
+            <li><strong>poll</strong>: recupera novos eventos de I/O, executa callbacks relacionados a I/O</li>
+            <li><strong>check</strong>: executa callbacks agendados por setImmediate()</li>
+            <li><strong>close callbacks</strong>: alguns callbacks de fechamento, como socket.on('close', ...)</li>
+        </ol>
+        <div class="example">
+            <pre><code><span class="object">console</span>.<span class="method">log</span>(<span class="string">'1. Início'</span>);
+
+<span class="function">setImmediate</span>(() <span class="operator">=></span> {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'4. setImmediate (fase check)'</span>);
+});
+
+<span class="function">setTimeout</span>(() <span class="operator">=></span> {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'3. setTimeout (fase timers)'</span>);
+}, <span class="number">0</span>);
+
+<span class="function">process</span>.<span class="method">nextTick</span>(() <span class="operator">=></span> {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'2. process.nextTick (executado entre fases)'</span>);
+});
+
+<span class="object">console</span>.<span class="method">log</span>(<span class="string">'5. Fim'</span>);</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Dicas e Práticas Recomendadas</h2>
+        <ul>
+            <li>Evite operações síncronas pesadas na thread principal para não bloquear o Event Loop.</li>
+            <li>Use Web Workers para operações intensivas de CPU em navegadores.</li>
+            <li>No Node.js, use o módulo worker_threads para operações que consomem muita CPU.</li>
+            <li>Entenda a diferença entre microtasks e macrotasks ao ordenar operações assíncronas.</li>
+            <li>Tenha cuidado com loops recursivos de Promises, que podem causar memory leaks.</li>
+            <li>Use ferramentas de profiling para identificar operações que bloqueiam o Event Loop.</li>
+        </ul>
+    </section>
+
+    <script>
+        // Função de simulação para esperar um tempo
+        function esperar(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Exemplo da Call Stack
+        document.getElementById('btnCallStack').addEventListener('click', async () => {
+            const output = document.getElementById('resultadoCallStack');
+            output.innerHTML = '';
+            
+            function terceira() {
+                output.innerHTML += 'Na função terceira<br>';
+                output.innerHTML += 'Call Stack: main() -> primeira() -> segunda() -> terceira()<br>';
+            }
+            
+            function segunda() {
+                output.innerHTML += 'Na função segunda<br>';
+                terceira();
+                output.innerHTML += 'Call Stack: main() -> primeira() -> segunda()<br>';
+            }
+            
+            function primeira() {
+                output.innerHTML += 'Na função primeira<br>';
+                segunda();
+                output.innerHTML += 'Call Stack: main() -> primeira()<br>';
+            }
+            
+            primeira();
+            output.innerHTML += 'Call Stack: main()<br>';
+        });
+
+        // Exemplo da Task Queue
+        document.getElementById('btnTaskQueue').addEventListener('click', async () => {
+            const output = document.getElementById('resultadoTaskQueue');
+            output.innerHTML = 'Executando...<br>';
+            
+            output.innerHTML += '1. Código síncrono começa<br>';
+            
+            setTimeout(() => {
+                output.innerHTML += '4. Callback do setTimeout<br>';
+            }, 0);
+            
+            const promise = new Promise((resolve) => {
+                output.innerHTML += '2. Promise executada<br>';
+                resolve();
+            });
+            
+            promise.then(() => {
+                output.innerHTML += '5. Callback do Promise (microtask)<br>';
+            });
+            
+            output.innerHTML += '3. Código síncrono termina<br>';
+        });
+
+        // Exemplo de Micro vs Macro tasks
+        document.getElementById('btnMicroMacro').addEventListener('click', async () => {
+            const output = document.getElementById('resultadoMicroMacro');
+            output.innerHTML = 'Executando...<br>';
+            
+            output.innerHTML += '1. Script inicia<br>';
+            
+            setTimeout(() => {
+                output.innerHTML += '6. Macrotask: setTimeout 1<br>';
+                
+                new Promise((resolve) => resolve())
+                    .then(() => {
+                        output.innerHTML += '7. Microtask dentro da Macrotask<br>';
+                    });
+                
+                setTimeout(() => {
+                    output.innerHTML += '8. Macrotask aninhada<br>';
+                }, 0);
+            }, 0);
+            
+            new Promise((resolve) => {
+                output.innerHTML += '2. Promise criada<br>';
+                resolve();
+            }).then(() => {
+                output.innerHTML += '4. Microtask 1<br>';
+                queueMicrotask(() => {
+                    output.innerHTML += '5. Microtask 2<br>';
+                });
+            });
+            
+            output.innerHTML += '3. Script termina<br>';
+        });
+
+        // Exemplo de bloqueio do Event Loop
+        document.getElementById('btnBloqueio').addEventListener('click', () => {
+            const output = document.getElementById('resultadoBloqueio');
+            output.innerHTML = 'Executando operação que pode bloquear a UI...<br>';
+            
+            function operacaoPesada() {
+                output.innerHTML += 'Iniciando operação pesada...<br>';
+                const inicio = Date.now();
+                
+                // Operação síncrona que bloqueia a thread principal
+                for (let i = 0; i < 1000000000; i++) {
+                    // Loop intensivo
+                }
+                
+                const duracao = Date.now() - inicio;
+                output.innerHTML += `Operação pesada concluída em ${duracao}ms<br>`;
+            }
+            
+            output.innerHTML += 'Antes da operação pesada<br>';
+            setTimeout(() => output.innerHTML += 'Este setTimeout deveria executar em 0ms<br>', 0);
+            
+            // Esta operação bloqueia o Event Loop
+            operacaoPesada();
+            
+            output.innerHTML += 'Depois da operação pesada<br>';
+        });
+
+        // Exemplo de bloqueio do Event Loop (versão segura)
+        document.getElementById('btnBloqueioSeguro').addEventListener('click', async () => {
+            const output = document.getElementById('resultadoBloqueio');
+            output.innerHTML = 'Executando versão não-bloqueante...<br>';
+            
+            output.innerHTML += 'Antes da operação<br>';
+            setTimeout(() => output.innerHTML += 'Este setTimeout executou em 0ms<br>', 0);
+            
+            // Versão que não bloqueia, usando chunks pequenos de processamento
+            output.innerHTML += 'Iniciando operação em chunks...<br>';
+            const inicio = Date.now();
+            
+            // Função que processa um pedaço e agenda o próximo
+            async function processarChunk(atual, total, chunkSize) {
+                const fim = Math.min(atual + chunkSize, total);
+                
+                for (let i = atual; i < fim; i++) {
+                    // Um pouco de processamento
+                }
+                
+                // Atualiza o progresso
+                const progresso = Math.floor((fim / total) * 100);
+                output.innerHTML = output.innerHTML.replace(/Progresso: \d+%<br>/g, '');
+                output.innerHTML += `Progresso: ${progresso}%<br>`;
+                
+                if (fim < total) {
+                    // Agenda o próximo chunk após permitir que o Event Loop respire
+                    setTimeout(() => processarChunk(fim, total, chunkSize), 0);
+                } else {
+                    const duracao = Date.now() - inicio;
+                    output.innerHTML += `Operação concluída em ${duracao}ms<br>`;
+                    output.innerHTML += 'Depois da operação<br>';
+                }
+            }
+            
+            // Inicia o processamento em chunks
+            processarChunk(0, 100000000, 1000000);
+        });
+
+        // Visualização do Event Loop
+        document.getElementById('btnVisualizacao').addEventListener('click', async () => {
+            const callStackVis = document.getElementById('callStackVis');
+            const callbackQueueVis = document.getElementById('callbackQueueVis');
+            const microtaskQueueVis = document.getElementById('microtaskQueueVis');
+            const webApiVis = document.getElementById('webApiVis');
+            
+            // Reset
+            callStackVis.innerHTML = '<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">main()</div>';
+            callbackQueueVis.innerHTML = '';
+            microtaskQueueVis.innerHTML = '';
+            webApiVis.innerHTML = '';
+            
+            // Simulação 1: Adiciona à Call Stack
+            await esperar(1000);
+            callStackVis.innerHTML += '<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">console.log("Início")</div>';
+            await esperar(500);
+            callStackVis.innerHTML = callStackVis.innerHTML.replace('<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">console.log("Início")</div>', '');
+            
+            // Simulação 2: setTimeout
+            await esperar(500);
+            callStackVis.innerHTML += '<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">setTimeout(callback, 0)</div>';
+            await esperar(500);
+            webApiVis.innerHTML += '<div style="background-color: #f39c12; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">Timer (0ms): callback</div>';
+            callStackVis.innerHTML = callStackVis.innerHTML.replace('<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">setTimeout(callback, 0)</div>', '');
+            
+            // Simulação 3: Promise
+            await esperar(500);
+            callStackVis.innerHTML += '<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">new Promise(executor)</div>';
+            await esperar(500);
+            callStackVis.innerHTML += '<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">executor(resolve, reject)</div>';
+            await esperar(500);
+            callStackVis.innerHTML = callStackVis.innerHTML.replace('<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">executor(resolve, reject)</div>', '');
+            callStackVis.innerHTML = callStackVis.innerHTML.replace('<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">new Promise(executor)</div>', '');
+            
+            // Simulação 4: then
+            await esperar(500);
+            callStackVis.innerHTML += '<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">promise.then(onFulfilled)</div>';
+            await esperar(500);
+            microtaskQueueVis.innerHTML += '<div style="background-color: #27ae60; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">Promise.then callback</div>';
+            callStackVis.innerHTML = callStackVis.innerHTML.replace('<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">promise.then(onFulfilled)</div>', '');
+            
+            // Simulação 5: console.log final
+            await esperar(500);
+            callStackVis.innerHTML += '<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">console.log("Fim")</div>';
+            await esperar(500);
+            callStackVis.innerHTML = callStackVis.innerHTML.replace('<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">console.log("Fim")</div>', '');
+            
+            // Timer concluído
+            await esperar(500);
+            webApiVis.innerHTML = '';
+            callbackQueueVis.innerHTML += '<div style="background-color: #3498db; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">setTimeout callback</div>';
+            
+            // Event Loop verifica Call Stack vazia e executa Microtasks
+            await esperar(1000);
+            callStackVis.innerHTML += '<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">Promise.then callback</div>';
+            microtaskQueueVis.innerHTML = '';
+            await esperar(500);
+            callStackVis.innerHTML = callStackVis.innerHTML.replace('<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">Promise.then callback</div>', '');
+            
+            // Event Loop pega da fila de callbacks
+            await esperar(1000);
+            callStackVis.innerHTML += '<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">setTimeout callback</div>';
+            callbackQueueVis.innerHTML = '';
+            await esperar(500);
+            callStackVis.innerHTML = callStackVis.innerHTML.replace('<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">setTimeout callback</div>', '');
+        });
+        
+        // Resetar visualização
+        document.getElementById('btnResetVis').addEventListener('click', () => {
+            document.getElementById('callStackVis').innerHTML = '<div style="background-color: #e74c3c; color: white; margin: 2px 0; padding: 3px; border-radius: 2px;">main()</div>';
+            document.getElementById('callbackQueueVis').innerHTML = '';
+            document.getElementById('microtaskQueueVis').innerHTML = '';
+            document.getElementById('webApiVis').innerHTML = '';
+        });
+    </script>
+</body>
+</html>
