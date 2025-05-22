@@ -15,15 +15,7 @@ function asyncExemplo() {
   })
 }
 
-//visualizando retorno
-
-console.log(asyncExemplo()) //nao vamos conseguir pois esta pendente
-
-asyncExemplo().then(
-  (mensagem) => {console.log(`CONCLUIDO COM SUCESSO: ${mensagem}`)}
-).catch(
-  (erro) => {console.log(`DEU RUIM: ${erro}`)}
-).finally(
-  () => {console.log("Fim da operaão, isso será executado de qualquer jeito")}
-)
-
+async function novaFuncao() {
+  const response = await asyncExemplo()
+  console.log(response)
+}

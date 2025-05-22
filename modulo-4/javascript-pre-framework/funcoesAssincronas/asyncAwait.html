@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial de Async/Await em JavaScript</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Tutorial de Async/Await em JavaScript</h1>
+    
+    <section>
+        <h2>O que é Async/Await?</h2>
+        <p>
+            Async/Await é uma sintaxe introduzida no ES2017 (ES8) que facilita o trabalho com Promises, tornando o código assíncrono mais legível e parecido com código síncrono.
+        </p>
+        <p>
+            Async/Await é construído sobre Promises, ou seja, não é uma alternativa às Promises, mas sim uma forma mais elegante de trabalhar com elas.
+        </p>
+    </section>
+
+    <section>
+        <h2>Funções Async</h2>
+        <p>
+            Uma função <code>async</code> sempre retorna uma Promise, independentemente do que você retorne dentro dela. 
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">async</span> <span class="keyword">function</span> <span class="function">minhaFuncaoAsync</span>() {
+    <span class="keyword">return</span> <span class="string">'Olá, mundo!'</span>;
+}
+
+<span class="comment">// Equivalente a:</span>
+<span class="keyword">function</span> <span class="function">minhaFuncaoPromise</span>() {
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Promise</span>(<span class="variable">resolve</span> <span class="operator">=></span> {
+        <span class="function">resolve</span>(<span class="string">'Olá, mundo!'</span>);
+    });
+}
+
+<span class="comment">// Ambas as funções podem ser usadas assim:</span>
+<span class="function">minhaFuncaoAsync</span>().<span class="method">then</span>(<span class="variable">mensagem</span> <span class="operator">=></span> <span class="object">console</span>.<span class="method">log</span>(<span class="variable">mensagem</span>));</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>A Palavra-chave Await</h2>
+        <p>
+            A palavra-chave <code>await</code> só pode ser usada dentro de funções <code>async</code> e faz com que o JavaScript aguarde até que a Promise seja resolvida, retornando seu valor.
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">function</span> <span class="function">esperar</span>(<span class="variable">ms</span>) {
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Promise</span>(<span class="variable">resolve</span> <span class="operator">=></span> <span class="function">setTimeout</span>(<span class="variable">resolve</span>, <span class="variable">ms</span>));
+}
+
+<span class="keyword">async</span> <span class="keyword">function</span> <span class="function">exemplo</span>() {
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Início'</span>);
+    
+    <span class="keyword">await</span> <span class="function">esperar</span>(<span class="number">2000</span>); <span class="comment">// Pausa a execução por 2 segundos</span>
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Após 2 segundos'</span>);
+    
+    <span class="keyword">await</span> <span class="function">esperar</span>(<span class="number">1000</span>); <span class="comment">// Pausa a execução por mais 1 segundo</span>
+    <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Após mais 1 segundo'</span>);
+    
+    <span class="keyword">return</span> <span class="string">'Concluído!'</span>;
+}</code></pre>
+        </div>
+
+        <div>
+            <button id="btnAwait">Executar exemplo await</button>
+            <div id="resultadoAwait" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Tratamento de Erros com Try/Catch</h2>
+        <p>
+            Com async/await, podemos tratar erros usando o tradicional bloco try/catch, o que torna o código mais limpo comparado ao uso de .catch() em Promises.
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">async</span> <span class="keyword">function</span> <span class="function">buscarDados</span>(<span class="variable">id</span>) {
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Promise</span>((<span class="variable">resolve</span>, <span class="variable">reject</span>) <span class="operator">=></span> {
+        <span class="function">setTimeout</span>(() <span class="operator">=></span> {
+            <span class="keyword">if</span> (<span class="variable">id</span> <span class="operator">></span> <span class="number">0</span>) {
+                <span class="keyword">const</span> <span class="variable">usuario</span> = {
+                    <span class="variable">id</span>: <span class="variable">id</span>,
+                    <span class="variable">nome</span>: <span class="string">'Usuário '</span> <span class="operator">+</span> <span class="variable">id</span>,
+                    <span class="variable">email</span>: <span class="string">`usuario${id}@exemplo.com`</span>
+                };
+                <span class="function">resolve</span>(<span class="variable">usuario</span>);
+            } <span class="keyword">else</span> {
+                <span class="function">reject</span>(<span class="string">'ID inválido'</span>);
+            }
+        }, <span class="number">1500</span>);
+    });
+}
+
+<span class="keyword">async</span> <span class="keyword">function</span> <span class="function">exemploTryCatch</span>() {
+    <span class="keyword">try</span> {
+        <span class="keyword">const</span> <span class="variable">usuario</span> = <span class="keyword">await</span> <span class="function">buscarDados</span>(<span class="number">1</span>);
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Usuário encontrado:'</span>, <span class="variable">usuario</span>);
+        
+        <span class="keyword">const</span> <span class="variable">usuarioInvalido</span> = <span class="keyword">await</span> <span class="function">buscarDados</span>(<span class="number">-1</span>); <span class="comment">// Vai gerar um erro</span>
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Este código não será executado'</span>);
+    } <span class="keyword">catch</span> (<span class="variable">erro</span>) {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="string">'Erro capturado:'</span>, <span class="variable">erro</span>);
+    } <span class="keyword">finally</span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Execução finalizada'</span>);
+    }
+}</code></pre>
+        </div>
+
+        <div>
+            <button id="btnTryCatch">Executar com try/catch</button>
+            <div id="resultadoTryCatch" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Comparação: Promises vs Async/Await</h2>
+        <p>
+            Vamos comparar o uso de Promises e Async/Await para o mesmo problema:
+        </p>
+        <div class="example">
+            <pre><code><span class="comment">// Com Promises</span>
+<span class="keyword">function</span> <span class="function">buscarUsuariosComPromises</span>() {
+    <span class="keyword">return</span> <span class="function">buscarDados</span>(<span class="number">1</span>)
+        .<span class="method">then</span>(<span class="variable">usuario1</span> <span class="operator">=></span> {
+            <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Usuário 1:'</span>, <span class="variable">usuario1</span>);
+            <span class="keyword">return</span> <span class="function">buscarDados</span>(<span class="number">2</span>);
+        })
+        .<span class="method">then</span>(<span class="variable">usuario2</span> <span class="operator">=></span> {
+            <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Usuário 2:'</span>, <span class="variable">usuario2</span>);
+            <span class="keyword">return</span> <span class="function">buscarDados</span>(<span class="number">3</span>);
+        })
+        .<span class="method">then</span>(<span class="variable">usuario3</span> <span class="operator">=></span> {
+            <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Usuário 3:'</span>, <span class="variable">usuario3</span>);
+            <span class="keyword">return</span> [<span class="variable">usuario1</span>, <span class="variable">usuario2</span>, <span class="variable">usuario3</span>]; <span class="comment">// Problema: usuário1 e usuário2 não estão no escopo</span>
+        })
+        .<span class="method">catch</span>(<span class="variable">erro</span> <span class="operator">=></span> {
+            <span class="object">console</span>.<span class="method">error</span>(<span class="string">'Erro:'</span>, <span class="variable">erro</span>);
+        });
+}
+
+<span class="comment">// Com Async/Await</span>
+<span class="keyword">async</span> <span class="keyword">function</span> <span class="function">buscarUsuariosComAsync</span>() {
+    <span class="keyword">try</span> {
+        <span class="keyword">const</span> <span class="variable">usuario1</span> = <span class="keyword">await</span> <span class="function">buscarDados</span>(<span class="number">1</span>);
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Usuário 1:'</span>, <span class="variable">usuario1</span>);
+        
+        <span class="keyword">const</span> <span class="variable">usuario2</span> = <span class="keyword">await</span> <span class="function">buscarDados</span>(<span class="number">2</span>);
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Usuário 2:'</span>, <span class="variable">usuario2</span>);
+        
+        <span class="keyword">const</span> <span class="variable">usuario3</span> = <span class="keyword">await</span> <span class="function">buscarDados</span>(<span class="number">3</span>);
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Usuário 3:'</span>, <span class="variable">usuario3</span>);
+        
+        <span class="keyword">return</span> [<span class="variable">usuario1</span>, <span class="variable">usuario2</span>, <span class="variable">usuario3</span>]; <span class="comment">// Todos os usuários estão no escopo</span>
+    } <span class="keyword">catch</span> (<span class="variable">erro</span>) {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="string">'Erro:'</span>, <span class="variable">erro</span>);
+    }
+}</code></pre>
+        </div>
+
+        <div>
+            <button id="btnComparacao">Comparar abordagens</button>
+            <div id="resultadoComparacao" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Executando Promises em Paralelo</h2>
+        <p>
+            Mesmo usando async/await, ainda podemos utilizar métodos como Promise.all() para executar Promises em paralelo:
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">async</span> <span class="keyword">function</span> <span class="function">buscarVariosUsuariosParalelo</span>() {
+    <span class="keyword">try</span> {
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Iniciando busca em paralelo...'</span>);
+        
+        <span class="comment">// Inicia todas as Promises ao mesmo tempo</span>
+        <span class="keyword">const</span> <span class="variable">promessas</span> = [
+            <span class="function">buscarDados</span>(<span class="number">1</span>),
+            <span class="function">buscarDados</span>(<span class="number">2</span>),
+            <span class="function">buscarDados</span>(<span class="number">3</span>)
+        ];
+        
+        <span class="comment">// Aguarda todas as Promises serem resolvidas</span>
+        <span class="keyword">const</span> <span class="variable">usuarios</span> = <span class="keyword">await</span> <span class="object">Promise</span>.<span class="method">all</span>(<span class="variable">promessas</span>);
+        
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Todos os usuários:'</span>, <span class="variable">usuarios</span>);
+        <span class="keyword">return</span> <span class="variable">usuarios</span>;
+    } <span class="keyword">catch</span> (<span class="variable">erro</span>) {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="string">'Erro na busca em paralelo:'</span>, <span class="variable">erro</span>);
+    }
+}</code></pre>
+        </div>
+
+        <div>
+            <button id="btnParalelo">Executar em paralelo</button>
+            <div id="resultadoParalelo" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Uso com Fetch API</h2>
+        <p>
+            Async/await é especialmente útil quando trabalhamos com a Fetch API para requisições HTTP:
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">async</span> <span class="keyword">function</span> <span class="function">buscarDadosAPI</span>() {
+    <span class="keyword">try</span> {
+        <span class="keyword">const</span> <span class="variable">resposta</span> = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'https://jsonplaceholder.typicode.com/users/1'</span>);
+        
+        <span class="keyword">if</span> (!<span class="variable">resposta</span>.<span class="variable">ok</span>) {
+            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="function">Error</span>(<span class="string">`Erro HTTP: ${resposta.status}`</span>);
+        }
+        
+        <span class="keyword">const</span> <span class="variable">dados</span> = <span class="keyword">await</span> <span class="variable">resposta</span>.<span class="method">json</span>();
+        <span class="object">console</span>.<span class="method">log</span>(<span class="string">'Dados do usuário:'</span>, <span class="variable">dados</span>);
+        <span class="keyword">return</span> <span class="variable">dados</span>;
+    } <span class="keyword">catch</span> (<span class="variable">erro</span>) {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="string">'Erro ao buscar dados:'</span>, <span class="variable">erro</span>);
+    }
+}</code></pre>
+        </div>
+
+        <div>
+            <button id="btnFetch">Buscar dados com Fetch</button>
+            <div id="resultadoFetch" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Loops Assíncronos</h2>
+        <p>
+            Async/await torna muito mais fácil trabalhar com loops assíncronos:
+        </p>
+        <div class="example">
+            <pre><code><span class="keyword">async</span> <span class="keyword">function</span> <span class="function">processarSequencialmente</span>(<span class="variable">ids</span>) {
+    <span class="keyword">const</span> <span class="variable">resultados</span> = [];
+    
+    <span class="comment">// Processamento sequencial (um após o outro)</span>
+    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="variable">id</span> <span class="keyword">of</span> <span class="variable">ids</span>) {
+        <span class="keyword">try</span> {
+            <span class="keyword">const</span> <span class="variable">usuario</span> = <span class="keyword">await</span> <span class="function">buscarDados</span>(<span class="variable">id</span>);
+            <span class="variable">resultados</span>.<span class="method">push</span>(<span class="variable">usuario</span>);
+            <span class="object">console</span>.<span class="method">log</span>(<span class="string">`Processado ID ${id}`</span>);
+        } <span class="keyword">catch</span> (<span class="variable">erro</span>) {
+            <span class="object">console</span>.<span class="method">error</span>(<span class="string">`Erro ao processar ID ${id}:`</span>, <span class="variable">erro</span>);
+        }
+    }
+    
+    <span class="keyword">return</span> <span class="variable">resultados</span>;
+}
+
+<span class="keyword">async</span> <span class="keyword">function</span> <span class="function">processarEmParalelo</span>(<span class="variable">ids</span>) {
+    <span class="comment">// Cria um array de Promises</span>
+    <span class="keyword">const</span> <span class="variable">promessas</span> = <span class="variable">ids</span>.<span class="method">map</span>(<span class="variable">id</span> <span class="operator">=></span> <span class="function">buscarDados</span>(<span class="variable">id</span>).<span class="method">catch</span>(<span class="variable">erro</span> <span class="operator">=></span> {
+        <span class="object">console</span>.<span class="method">error</span>(<span class="string">`Erro ao processar ID ${id}:`</span>, <span class="variable">erro</span>);
+        <span class="keyword">return</span> <span class="keyword">null</span>; <span class="comment">// Retorna null em caso de erro para não interromper o Promise.all</span>
+    }));
+    
+    <span class="comment">// Aguarda todas as Promises serem resolvidas</span>
+    <span class="keyword">const</span> <span class="variable">resultados</span> = <span class="keyword">await</span> <span class="object">Promise</span>.<span class="method">all</span>(<span class="variable">promessas</span>);
+    <span class="keyword">return</span> <span class="variable">resultados</span>.<span class="method">filter</span>(<span class="variable">resultado</span> <span class="operator">=></span> <span class="variable">resultado</span> !== <span class="keyword">null</span>);
+}</code></pre>
+        </div>
+
+        <div>
+            <button id="btnLoop">Executar loops assíncronos</button>
+            <div id="resultadoLoop" class="output"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Dicas e Práticas Recomendadas</h2>
+        <ul>
+            <li>Sempre use <code>try/catch</code> com async/await para tratar erros corretamente.</li>
+            <li>Lembre-se que uma função async sempre retorna uma Promise, mesmo se você retornar um valor simples.</li>
+            <li>Para operações independentes, use Promise.all() para melhor desempenho.</li>
+            <li>Não bloqueie a execução com operações síncronas pesadas dentro de funções async.</li>
+            <li>Funções async são apenas uma sintaxe mais limpa para trabalhar com Promises, não uma substituição.</li>
+        </ul>
+    </section>
+
+    <script>
+        // Função de espera
+        function esperar(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Função para buscar dados
+        function buscarDados(id) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (id > 0) {
+                        const usuario = {
+                            id: id,
+                            nome: 'Usuário ' + id,
+                            email: `usuario${id}@exemplo.com`
+                        };
+                        resolve(usuario);
+                    } else {
+                        reject('ID inválido');
+                    }
+                }, 1500);
+            });
+        }
+
+        // Exemplo simples de await
+        document.getElementById('btnAwait').addEventListener('click', async () => {
+            const output = document.getElementById('resultadoAwait');
+            output.innerHTML = 'Início';
+            
+            await esperar(2000);
+            output.innerHTML += '<br>Após 2 segundos';
+            
+            await esperar(1000);
+            output.innerHTML += '<br>Após mais 1 segundo';
+            
+            output.innerHTML += '<br>Concluído!';
+        });
+
+        // Exemplo de try/catch
+        document.getElementById('btnTryCatch').addEventListener('click', async () => {
+            const output = document.getElementById('resultadoTryCatch');
+            output.innerHTML = 'Executando...';
+            
+            try {
+                const usuario = await buscarDados(1);
+                output.innerHTML = 'Usuário encontrado: ' + JSON.stringify(usuario);
+                
+                output.innerHTML += '<br>Tentando buscar usuário com ID inválido...';
+                const usuarioInvalido = await buscarDados(-1);
+                output.innerHTML += '<br>Este texto não será exibido';
+            } catch (erro) {
+                output.innerHTML += '<br>Erro capturado: ' + erro;
+            } finally {
+                output.innerHTML += '<br>Execução finalizada';
+            }
+        });
+
+        // Comparação entre abordagens
+        document.getElementById('btnComparacao').addEventListener('click', async () => {
+            const output = document.getElementById('resultadoComparacao');
+            output.innerHTML = 'Comparando abordagens...';
+            
+            async function buscarUsuariosComAsync() {
+                try {
+                    const usuario1 = await buscarDados(1);
+                    output.innerHTML += '<br>Async/Await - Usuário 1: ' + JSON.stringify(usuario1);
+                    
+                    const usuario2 = await buscarDados(2);
+                    output.innerHTML += '<br>Async/Await - Usuário 2: ' + JSON.stringify(usuario2);
+                    
+                    return 'Async/Await concluído';
+                } catch (erro) {
+                    output.innerHTML += '<br>Async/Await - Erro: ' + erro;
+                }
+            }
+            
+            function buscarUsuariosComPromises() {
+                return buscarDados(1)
+                    .then(usuario1 => {
+                        output.innerHTML += '<br>Promises - Usuário 1: ' + JSON.stringify(usuario1);
+                        return buscarDados(2);
+                    })
+                    .then(usuario2 => {
+                        output.innerHTML += '<br>Promises - Usuário 2: ' + JSON.stringify(usuario2);
+                        return 'Promises concluído';
+                    })
+                    .catch(erro => {
+                        output.innerHTML += '<br>Promises - Erro: ' + erro;
+                    });
+            }
+            
+            // Executa ambos os métodos
+            const resultadoAsync = await buscarUsuariosComAsync();
+            output.innerHTML += '<br>' + resultadoAsync;
+            
+            const resultadoPromises = await buscarUsuariosComPromises();
+            output.innerHTML += '<br>' + resultadoPromises;
+        });
+
+        // Execução em paralelo
+        document.getElementById('btnParalelo').addEventListener('click', async () => {
+            const output = document.getElementById('resultadoParalelo');
+            output.innerHTML = 'Iniciando busca em paralelo...';
+            
+            try {
+                // Inicia todas as Promises ao mesmo tempo
+                const promessas = [
+                    buscarDados(1),
+                    buscarDados(2),
+                    buscarDados(3)
+                ];
+                
+                // Aguarda todas as Promises serem resolvidas
+                const usuarios = await Promise.all(promessas);
+                
+                output.innerHTML += '<br>Todos os usuários obtidos simultaneamente:';
+                usuarios.forEach((usuario, index) => {
+                    output.innerHTML += '<br>Usuário ' + (index + 1) + ': ' + JSON.stringify(usuario);
+                });
+            } catch (erro) {
+                output.innerHTML += '<br>Erro na busca em paralelo: ' + erro;
+            }
+        });
+
+        // Fetch API
+        document.getElementById('btnFetch').addEventListener('click', async () => {
+            const output = document.getElementById('resultadoFetch');
+            output.innerHTML = 'Buscando dados da API...';
+            
+            try {
+                const resposta = await fetch('https://jsonplaceholder.typicode.com/users/1');
+                
+                if (!resposta.ok) {
+                    throw new Error(`Erro HTTP: ${resposta.status}`);
+                }
+                
+                const dados = await resposta.json();
+                output.innerHTML = 'Dados do usuário: ' + JSON.stringify(dados, null, 2)
+                    .replace(/\n/g, '<br>')
+                    .replace(/ /g, '&nbsp;');
+            } catch (erro) {
+                output.innerHTML = 'Erro ao buscar dados: ' + erro;
+            }
+        });
+
+        // Loops assíncronos
+        document.getElementById('btnLoop').addEventListener('click', async () => {
+            const output = document.getElementById('resultadoLoop');
+            output.innerHTML = 'Executando loops assíncronos...';
+            
+            const ids = [1, 2, 3];
+            
+            // Processamento sequencial
+            output.innerHTML += '<br><br>Processamento sequencial:';
+            
+            for (const id of ids) {
+                try {
+                    const usuario = await buscarDados(id);
+                    output.innerHTML += '<br>Processado ID ' + id + ': ' + JSON.stringify(usuario);
+                } catch (erro) {
+                    output.innerHTML += '<br>Erro ao processar ID ' + id + ': ' + erro;
+                }
+            }
+            
+            // Processamento em paralelo
+            output.innerHTML += '<br><br>Processamento em paralelo:';
+            
+            try {
+                const promessas = ids.map(id => buscarDados(id));
+                const resultados = await Promise.all(promessas);
+                
+                resultados.forEach((usuario, index) => {
+                    output.innerHTML += '<br>Processado ID ' + ids[index] + ': ' + JSON.stringify(usuario);
+                });
+                
+                output.innerHTML += '<br>Todos processados simultaneamente!';
+            } catch (erro) {
+                output.innerHTML += '<br>Erro no processamento em paralelo: ' + erro;
+            }
+        });
+    </script>
+</body>
+</html>
