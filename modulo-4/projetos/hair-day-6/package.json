@@ -1,0 +1,20 @@
+{
+  "name": "hair-day-6",
+  "version": "1.0.0",
+  "description": "Aplicaçõa Web para agendamento de corte de cabelo",
+  "main": "index.js",
+  "scripts": {
+    "server": "json-server --watch server.json --port 3333",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "Camila Sena",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^1.0.0-alpha.21"
+  },
+  "devDependencies": {
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
