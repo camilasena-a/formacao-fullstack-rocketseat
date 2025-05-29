@@ -5,6 +5,8 @@ import { horaClick } from "./hours-click";
 const ul = document.querySelector("#hours")
 
 export function hoursLoad({data}) {
+  //limpa lista de horarios
+  ul.innerHTML = ""
   const aberto = openingHours.map((hora) => {
     // recuperando somente a hora, sem minutos
     const [horaDisponivel] = hora.split(":")
