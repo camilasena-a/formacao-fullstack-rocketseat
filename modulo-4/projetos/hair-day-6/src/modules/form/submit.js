@@ -1,4 +1,5 @@
 import dayjs from "dayjs"
+import { addAgendamento } from "../../services/addAgendamento"
 
 const form = document.querySelector("form")
 const dataSelecionada = document.querySelector("#date")
@@ -11,7 +12,7 @@ const dataAtual = dayjs(new Date()).format("YYYY-MM-DD")
 dataSelecionada.value = dataAtual
 dataSelecionada.min = dataAtual //também não permitiremos escolher data anterior a de hoje
 
-form.onsubmit = (event)=> {
+form.onsubmit = async (event)=> {
   event.preventDefault()
   try {
     //capturando cliente
@@ -32,13 +33,9 @@ form.onsubmit = (event)=> {
 
     const when = dayjs(dataSelecionada.value).add(hour, "hour")
 
-    //gerando Id
-    const clienteId = new Date().getTime()
-
-    console.log({
-      clienteId, 
+    await addAgendamento({
       nomeCliente, 
-      quando: when
+      when
     })
   } catch (error) {
     alert("Não foi possível realizar o agendamento")

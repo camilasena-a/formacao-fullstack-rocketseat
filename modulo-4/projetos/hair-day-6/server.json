@@ -1,5 +1,30 @@
 {
   "agendamentos": [
-    
+    {
+      "id": "6f5f"
+    },
+    {
+      "id": "5750"
+    },
+    {
+      "id": "523a"
+    },
+    {
+      "id": "27b9",
+      "clienteId": 1748629534339,
+      "nomeCliente": "Vitor",
+      "when": "2025-05-30T22:00:00.000Z"
+    },
+    {
+      "id": "4842",
+      "clienteId": 1748629589776,
+      "nomeCliente": "Camila",
+      "when": "2025-05-30T23:00:00.000Z"
+    },
+    {
+      "id": "447c",
+      "nomeCliente": "Vitor",
+      "when": "2025-05-31T00:00:00.000Z"
+    }
   ]
 }
