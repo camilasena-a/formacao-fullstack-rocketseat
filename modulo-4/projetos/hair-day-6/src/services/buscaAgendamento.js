@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { apiConfig } from "./api-config";
 
-async function buscaAgendamento({ data }) {
+export async function buscaAgendamento({ data }) {
   try {
     // Faz a requisição de busca
     const resposta = await fetch(`${apiConfig.baseURL}/agendamentos`);
