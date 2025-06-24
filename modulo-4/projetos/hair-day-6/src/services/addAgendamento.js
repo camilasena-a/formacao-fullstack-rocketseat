@@ -2,6 +2,7 @@ import { apiConfig } from "./api-config";
 
 export async function addAgendamento({nomeCliente, when}) {
   try {
+    //faz a requisição para enviar os dados do agendamento
     await fetch(`${apiConfig.baseURL}/agendamentos`, {
       method: "POST",
       headers: {
