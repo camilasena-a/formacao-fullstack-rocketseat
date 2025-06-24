@@ -1,0 +1,338 @@
+@import url('colors.css');
+
+:root {
+  --background: #121214;
+  --surface: #202024;
+  --primary: #8257e5;
+  --on-surface: #E1E1E6;
+  --on-surface-secondary: #C4C4CC;
+  --stroke: #323238;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background-primary);
+  color: var(--content-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0;
+}
+
+.logo img {
+  display: block;
+  height: 50px;
+}
+
+main {
+  margin-top: 32px;
+  padding: 0 32px;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--stroke);
+  padding-bottom: 24px;
+}
+
+.main-header h1 {
+  font-size: 24px;
+}
+
+.main-header p {
+  color: var(--content-secondary);
+  margin-top: 8px;
+}
+
+.date-picker input[type="date"] {
+  background: var(--surface) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%239C9C9C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>') no-repeat;
+  background-position: 90% 50%;
+  border: 1px solid var(--stroke);
+  padding: 12px 16px;
+  color: var(--on-surface);
+  border-radius: 6px;
+  color-scheme: dark;
+}
+
+.schedule {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.period {
+  padding: 1.2rem;
+  background-color: var(--background-secondary);
+  border-radius: 1rem;
+}
+
+.period-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.period-title h2 {
+  font-size: 20px;
+}
+
+.period-title time {
+  padding: 4px 12px;
+  font-size: 14px;
+  margin-left: auto;
+}
+
+.period ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.period li {
+  padding: 16px 24px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.period li time {
+  font-weight: bold;
+}
+
+.client-details {
+  font-size: 12px;
+  flex-grow: 1;
+}
+
+.client-details strong {
+    color: white;
+}
+
+.service {
+  width: 200px;
+  color: var(--on-surface-secondary);
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: var(--content-tertiary);
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+footer {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+}
+
+.new-appointment-btn {
+  background-color: var(--content-brand);
+  color: black;
+  border: none;
+  padding: 16px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.new-appointment-btn:hover {
+    filter: brightness(0.9);
+    background-color: #BDB4FA;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: var(--background-primary);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0;
+  margin-bottom: 5px;
+}
+
+.modal-header h2 {
+  font-size: 24px;
+  color: var(--content-primary);
+  margin: 0;
+}
+
+
+.close-btn img {
+  width: 20px;
+  height: 20px;
+  filter: invert(1);
+}
+
+.modal p {
+  padding: 0 24px;
+  margin: 0 0 30px 0;
+  color: var(--content-secondary);
+  font-size: 12px;
+}
+
+.modal-form {
+  padding: 0 24px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--content-primary);
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  background-color: var(--background-primary);
+  color: var(--content-primary);
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.form-group input:hover,
+.form-group select:hover {
+  outline: none;
+  border-color: var(--border-primary);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--content-brand);
+}
+
+.form-group input:focus:hover,
+.form-group select:focus:hover {
+  border-color: var(--content-brand);
+}
+
+.form-group input[type="date"],
+.form-group input[type="time"] {
+  color-scheme: dark;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.cancel-btn,
+.confirm-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn {
+  background: none;
+  border: 1px solid var(--stroke);
+  color: var(--content-secondary);
+}
+
+.cancel-btn:hover {
+  background-color: var(--stroke);
+  color: var(--content-primary);
+}
+
+.confirm-btn {
+  background-color: var(--content-brand);
+  border: none;
+  color: black;
+  font-weight: bold;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.confirm-btn:hover {
+  filter: brightness(0.9);
+  background-color: #BDB4FA;
+}
+
+/* Responsividade do Modal */
+@media (max-width: 640px) {
+  .modal {
+    width: 95%;
+    margin: 20px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+} 
