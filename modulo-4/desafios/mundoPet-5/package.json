@@ -1,16 +1,23 @@
 {
-  "name": "mundopet-5",
+  "name": "mundopet",
   "version": "1.0.0",
-  "description": "",
+  "description": "Aplicação web para gerenciamento de serviços de petshop",
   "main": "index.js",
   "scripts": {
+    "build": "webpack",
+    "dev": "webpack serve",
     "server": "json-server --watch server.json --port 3333",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Camila Sena",
   "license": "ISC",
   "dependencies": {
     "json-server": "^1.0.0-alpha.21"
+  },
+  "devDependencies": {
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   }
 }
