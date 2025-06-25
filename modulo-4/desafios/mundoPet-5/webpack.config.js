@@ -26,4 +26,13 @@ module.exports = {
       favicon: path.resolve("src", "assets", "paw-icon.png")
     }),
   ],
-}
+
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+    ],
+  },
+};
