@@ -13,6 +13,7 @@
   "author": "Camila Sena",
   "license": "ISC",
   "dependencies": {
+    "dayjs": "^1.11.10",
     "json-server": "^1.0.0-alpha.21"
   },
   "devDependencies": {
