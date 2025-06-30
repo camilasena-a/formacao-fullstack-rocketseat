@@ -13,3 +13,6 @@ import "./libs/dayjs";
 
 import "./modules/form/submit.js"
 import "./modules/home/dataVisualizacao.js"
+import "./modules/page-load.js"
+import "./modules/agendamentos/load.js"
+import "./modules/form/horasLoad.js"

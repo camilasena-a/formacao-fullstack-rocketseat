@@ -318,6 +318,31 @@ footer {
   background-color: #BDB4FA;
 }
 
+.disabled {
+  color: var(--content-secondary);
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Estilos para select de horários */
+select#appointment-time optgroup {
+  color: var(--content-primary);
+  font-weight: bold;
+  font-style: normal;
+}
+
+select#appointment-time option {
+  color: var(--content-primary);
+  padding: 8px;
+}
+
+select#appointment-time option:disabled {
+  color: var(--content-secondary) !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
 /* Responsividade do Modal */
 @media (max-width: 640px) {
   .modal {
