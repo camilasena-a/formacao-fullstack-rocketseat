@@ -139,6 +139,11 @@ main {
   font-size: 14px;
 }
 
+.remove-btn:hover {
+  color: var(--content-brand);
+  text-decoration: underline;
+}
+
 footer {
   position: fixed;
   bottom: 30px;
