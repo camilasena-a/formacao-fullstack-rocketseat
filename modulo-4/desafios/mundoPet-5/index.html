@@ -121,45 +121,62 @@
       <form class="modal-form">
         <div class="form-group">
           <label for="tutor-name">Nome do tutor</label>
-          <input type="text" id="tutor-name" name="tutor-name" required placeholder="Helena Souza">
+          <div class="input-container">
+            <img src="src/assets/user-icon.png" alt="" class="input-icon">
+            <input type="text" id="tutor-name" name="tutor-name" required placeholder="Helena Souza">
+          </div>
         </div>
 
         <div class="form-group">
           <label for="pet-name">Nome do pet</label>
-          <input type="text" id="pet-name" name="pet-name" required placeholder="Thor">
+          <div class="input-container">
+            <img src="src/assets/paw-icon.png" alt="" class="input-icon">
+            <input type="text" id="pet-name" name="pet-name" required placeholder="Thor">
+          </div>
         </div>
 
         <div class="form-group">
           <label for="phone">Telefone</label>
-          <input type="tel" id="phone" name="phone" required placeholder="(00) 0 00000-0000">
+          <div class="input-container">
+            <img src="src/assets/phone-icon.png" alt="" class="input-icon">
+            <input type="tel" id="phone" name="phone" required placeholder="(00) 0 00000-0000">
+          </div>
         </div>
-
 
         <div class="form-group">
           <label for="service">Serviço</label>
-          <select id="service" name="service" required>
-            <option value="">Selecione um serviço</option>
-            <option value="vacinacao">Vacinação</option>
-            <option value="corte-unhas">Corte de Unhas</option>
-            <option value="anti-pulgas">Aplicação de Anti-pulgas</option>
-            <option value="tosa-higienica">Tosa Higiênica</option>
-            <option value="limpeza-dentes">Limpeza de Dentes</option>
-            <option value="consulta">Consulta Veterinária</option>
-            <option value="banho-tosa">Banho e Tosa</option>
-          </select>
+          <div class="input-container">
+            <img src="src/assets/check-icon.png" alt="" class="input-icon">
+            <select id="service" name="service" required>
+              <option value="">Selecione um serviço</option>
+              <option value="vacinacao">Vacinação</option>
+              <option value="corte-unhas">Corte de Unhas</option>
+              <option value="anti-pulgas">Aplicação de Anti-pulgas</option>
+              <option value="tosa-higienica">Tosa Higiênica</option>
+              <option value="limpeza-dentes">Limpeza de Dentes</option>
+              <option value="consulta">Consulta Veterinária</option>
+              <option value="banho-tosa">Banho e Tosa</option>
+            </select>
+          </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="appointment-date">Data</label>
-            <input type="date" id="appointment-date" name="appointment-date" required>
+            <div class="input-container">
+              <input type="date" id="appointment-date" name="appointment-date" required>
+              <img src="src/assets/calendar-icon.png" alt="" class="input-icon calendar-icon" onclick="openDatePicker('appointment-date')">
+            </div>
           </div>
 
           <div class="form-group">
             <label for="appointment-time">Horário</label>
-            <select id="appointment-time" name="appointment-time" required>
-              <option value="">Selecione um horário</option>
-            </select>
+            <div class="input-container">
+              <img src="src/assets/clock-icon.png" alt="" class="input-icon">
+              <select id="appointment-time" name="appointment-time" required>
+                <option value="">Selecione um horário</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -172,6 +189,20 @@
   </div>
 
   <script>
+    function openDatePicker(inputId) {
+      const input = document.getElementById(inputId);
+      if (input) {
+        // Tenta usar o método moderno showPicker() se disponível
+        if (input.showPicker) {
+          input.showPicker();
+        } else {
+          // Fallback: foca no input para abrir o calendário
+          input.focus();
+          input.click();
+        }
+      }
+    }
+
     function openModal() {
       // Calcular largura da scrollbar antes de esconder
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;

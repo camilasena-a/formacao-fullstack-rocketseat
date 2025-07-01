@@ -225,6 +225,23 @@ footer {
   margin-bottom: 16px;
 }
 
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  width: 20px;
+  height: 20px;
+  z-index: 1;
+  filter: invert(0.7) brightness(1.2);
+  pointer-events: none;
+  opacity: 0.8;
+}
+
 .form-group label {
   display: block;
   margin-bottom: 8px;
@@ -243,6 +260,67 @@ footer {
   color: var(--content-primary);
   font-size: 16px;
   transition: border-color 0.2s;
+}
+
+.input-container input,
+.input-container select {
+  padding-left: 44px;
+}
+
+/* Remove completamente a seta do select */
+.form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+}
+
+.input-container select {
+  background-image: none;
+  padding-right: 16px;
+}
+
+/* Remove o ícone padrão do campo de data */
+.input-container input[type="date"] {
+  background-image: none;
+  padding-left: 16px;
+  padding-right: 44px;
+}
+
+/* Remove o ícone padrão do campo de data no WebKit */
+.input-container input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  appearance: none;
+}
+
+/* Remove o ícone padrão do campo de data no Firefox */
+.input-container input[type="date"]::-moz-calendar-picker-indicator {
+  display: none;
+}
+
+/* Ícone de calendário personalizado à direita */
+.input-container .input-icon.calendar-icon {
+  left: auto;
+  right: 12px;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Remove o fundo branco dos campos preenchidos automaticamente */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus,
+.form-group input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--background-primary) inset !important;
+  -webkit-text-fill-color: var(--content-primary) !important;
+  background-color: var(--background-primary) !important;
+  background-image: none !important;
+}
+
+/* Remove o fundo branco dos campos preenchidos em outros navegadores */
+.form-group input:autofill {
+  background-color: var(--background-primary) !important;
+  color: var(--content-primary) !important;
 }
 
 .form-group input:hover,
