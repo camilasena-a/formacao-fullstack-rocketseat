@@ -136,6 +136,7 @@ main {
   color: var(--content-tertiary);
   font-weight: bold;
   cursor: pointer;
+  transition: all 0.3s;
   font-size: 14px;
 }
 
@@ -160,6 +161,7 @@ footer {
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s;
 }
 
 .new-appointment-btn:hover {
@@ -285,6 +287,14 @@ footer {
   padding-right: 16px;
 }
 
+/* Adiciona seta personalizada ao campo de horário */
+.input-container select#appointment-time {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23C4C4CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,9 12,15 18,9"></polyline></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
 /* Remove o ícone padrão do campo de data */
 .input-container input[type="date"] {
   background-image: none;
@@ -374,7 +384,7 @@ footer {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s;
 }
 
 .cancel-btn {
@@ -386,6 +396,7 @@ footer {
 .cancel-btn:hover {
   background-color: var(--stroke);
   color: var(--content-primary);
+  transition: all 0.3s;
 }
 
 .confirm-btn {

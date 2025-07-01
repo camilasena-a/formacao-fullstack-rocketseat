@@ -10,7 +10,7 @@ export function horasLoad (data) {
   }
   
   // Limpa as opções existentes, mantendo apenas o placeholder
-  selectHorario.innerHTML = '<option value="">Selecione um horário</option>';
+  selectHorario.innerHTML = '<option value="">Horário</option>';
 
   const verificaDisponivel = horarioFuncionamento.map((horario) => {
     // Constrói a data e hora completa para comparação
