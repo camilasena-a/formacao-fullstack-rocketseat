@@ -34,7 +34,7 @@ export function horasLoad (data) {
     }),
     noite: verificaDisponivel.filter(({horario}) => {
       const hora = parseInt(horario.split(":")[0]);
-      return hora >= 18 && hora <= 20;
+      return hora >= 18;
     })
   };
 
