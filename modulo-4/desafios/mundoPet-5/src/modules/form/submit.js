@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-
+import { novoAgendamento } from "../../services/novo-agendamento"
 const form = document.querySelector(".modal-form")
 const dataFormulario = document.querySelector("#appointment-date")
 
@@ -17,7 +17,7 @@ const horaAtual = dayjs(new Date()).format("HH:mm")
 
 
 
-form.onsubmit = (event) => {
+form.onsubmit = async (event) => {
   event.preventDefault()
   try {
     //recuperando dados do formulario
@@ -36,7 +36,8 @@ form.onsubmit = (event) => {
     //gera um id unico
     const id = new Date().getTime()
 
-    console.log({dataHora, id})
+    console.log({dataHora, id,nomeTutor, nomePet})
+    await novoAgendamento({dataHora, id,nomeTutor, nomePet})
   } catch (error) {
     alert("Erro ao enviar o formulário")
     console.log(error)
