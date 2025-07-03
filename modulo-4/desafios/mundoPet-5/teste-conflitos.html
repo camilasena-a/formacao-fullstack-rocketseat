@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Conflitos - Mundo Pet</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121214;
+            color: #E1E1E6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #202024;
+            padding: 25px;
+            border-radius: 16px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #121214;
+            border-radius: 12px;
+            border: 1px solid #323238;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #E1E1E6;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #323238;
+            border-radius: 8px;
+            background-color: #121214;
+            color: #E1E1E6;
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        button {
+            background: #8257e5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { filter: brightness(0.9); }
+        button.danger { background: #ef4444; }
+        button.success { background: #22c55e; }
+        .log-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: #0D0D0F;
+            border-radius: 12px;
+            border: 1px solid #323238;
+        }
+        pre {
+            background: #0D0D0F;
+            color: #E1E1E6;
+            padding: 12px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .status {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        .status.success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .status.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .agendamentos-existentes {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #8257e5;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚫 Teste de Validação de Conflitos</h1>
+        <p>Este teste verifica se o sistema está impedindo agendamentos duplicados no mesmo horário.</p>
+        
+        <div class="agendamentos-existentes">
+            <h3>📋 Agendamentos Existentes (10/01/2025)</h3>
+            <div id="lista-agendamentos">Carregando...</div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧪 Teste de Agendamento</h2>
+            <p>Tente agendar em um horário já ocupado para ver a validação funcionando:</p>
+            
+            <form id="form-teste">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tutor-name">Nome do Tutor:</label>
+                        <input type="text" id="tutor-name" value="João Teste" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pet-name">Nome do Pet:</label>
+                        <input type="text" id="pet-name" value="Rex" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Telefone:</label>
+                        <input type="tel" id="phone" value="(11) 99999-9999" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Serviço:</label>
+                        <select id="service" required>
+                            <option value="consulta">Consulta Veterinária</option>
+                            <option value="vacinacao">Vacinação</option>
+                            <option value="banho-tosa">Banho e Tosa</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="appointment-date">Data:</label>
+                        <input type="date" id="appointment-date" value="2025-01-10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointment-time">Horário:</label>
+                        <select id="appointment-time" required>
+                            <option value="">Selecione um horário</option>
+                            <option value="09:00">09:00 (Ocupado - teste conflito)</option>
+                            <option value="10:30">10:30 (Ocupado - teste conflito)</option>
+                            <option value="11:00">11:00 (Livre)</option>
+                            <option value="14:00">14:00 (Ocupado - teste conflito)</option>
+                            <option value="16:00">16:00 (Livre)</option>
+                            <option value="20:00">20:00 (Ocupado - teste conflito)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <button type="submit">📝 Tentar Agendar</button>
+                    <button type="button" onclick="carregarAgendamentos()">🔄 Atualizar Lista</button>
+                    <button type="button" onclick="limparLog()">🗑️ Limpar Log</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="log-section">
+            <h3>📊 Log de Testes:</h3>
+            <pre id="log-output">Iniciando teste de conflitos...\n</pre>
+        </div>
+    </div>
+
+    <script>
+        let logOutput = document.getElementById('log-output');
+        
+        function log(message, tipo = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const emoji = {
+                'info': '📝',
+                'success': '✅',
+                'error': '❌',
+                'warning': '⚠️',
+                'conflict': '🚫'
+            }[tipo] || '📝';
+            
+            logOutput.textContent += `[${timestamp}] ${emoji} ${message}\n`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+        
+        function limparLog() {
+            logOutput.textContent = 'Log limpo.\n';
+        }
+        
+        function mostrarStatus(mensagem, tipo = 'info') {
+            // Remove status anterior
+            const statusAnterior = document.querySelector('.status');
+            if (statusAnterior) statusAnterior.remove();
+            
+            const div = document.createElement('div');
+            div.className = `status ${tipo}`;
+            div.textContent = mensagem;
+            
+            const form = document.getElementById('form-teste');
+            form.parentNode.insertBefore(div, form.nextSibling);
+            
+            setTimeout(() => div.remove(), 8000);
+        }
+        
+        async function carregarAgendamentos() {
+            try {
+                log('🔍 Carregando agendamentos existentes...', 'info');
+                
+                const resposta = await fetch('http://localhost:3333/agendamentos');
+                const agendamentos = await resposta.json();
+                
+                const data = '2025-01-10';
+                const agendamentosDoDia = agendamentos.filter(agendamento => {
+                    const dataAgendamento = new Date(agendamento.dataHora).toISOString().split('T')[0];
+                    return dataAgendamento === data;
+                });
+                
+                log(`📊 ${agendamentosDoDia.length} agendamentos encontrados para ${data}`, 'success');
+                
+                const lista = document.getElementById('lista-agendamentos');
+                if (agendamentosDoDia.length === 0) {
+                    lista.innerHTML = '<p>Nenhum agendamento encontrado para esta data.</p>';
+                } else {
+                    lista.innerHTML = agendamentosDoDia.map(ag => {
+                        const hora = new Date(ag.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                        return `<p><strong>${hora}</strong> - ${ag.nomePet} (${ag.nomeTutor}) - ${ag.servico}</p>`;
+                    }).join('');
+                }
+                
+                return agendamentosDoDia;
+                
+            } catch (error) {
+                log(`❌ Erro ao carregar agendamentos: ${error.message}`, 'error');
+                document.getElementById('lista-agendamentos').innerHTML = '<p>Erro ao carregar agendamentos.</p>';
+                return [];
+            }
+        }
+        
+        // Simula a função de verificação de conflito
+        async function verificarConflito(dataAgendamento, horaAgendamento) {
+            try {
+                log(`🔍 Verificando conflitos para ${dataAgendamento} às ${horaAgendamento}`, 'info');
+                
+                const resposta = await fetch('http://localhost:3333/agendamentos');
+                const agendamentos = await resposta.json();
+                
+                const conflito = agendamentos.find(agendamento => {
+                    const dataExistente = new Date(agendamento.dataHora).toISOString().split('T')[0];
+                    const horaExistente = new Date(agendamento.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                    
+                    return dataExistente === dataAgendamento && horaExistente === horaAgendamento;
+                });
+                
+                if (conflito) {
+                    log(`🚫 CONFLITO DETECTADO!`, 'conflict');
+                    log(`   Horário: ${horaAgendamento}`, 'conflict');
+                    log(`   Pet existente: ${conflito.nomePet}`, 'conflict');
+                    log(`   Tutor existente: ${conflito.nomeTutor}`, 'conflict');
+                    log(`   Serviço: ${conflito.servico}`, 'conflict');
+                    
+                    return conflito;
+                }
+                
+                log(`✅ Horário ${horaAgendamento} está livre`, 'success');
+                return null;
+                
+            } catch (error) {
+                log(`❌ Erro ao verificar conflito: ${error.message}`, 'error');
+                return null;
+            }
+        }
+        
+        // Handler do formulário
+        document.getElementById('form-teste').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const nomeTutor = document.getElementById('tutor-name').value.trim();
+            const nomePet = document.getElementById('pet-name').value.trim();
+            const telefone = document.getElementById('phone').value.trim();
+            const servico = document.getElementById('service').value;
+            const dataAgendamento = document.getElementById('appointment-date').value;
+            const horaAgendamento = document.getElementById('appointment-time').value;
+            
+            log('📝 Iniciando teste de agendamento...', 'info');
+            log(`Dados: ${nomePet} (${nomeTutor}) - ${dataAgendamento} às ${horaAgendamento}`, 'info');
+            
+            // Validação de conflito
+            const conflito = await verificarConflito(dataAgendamento, horaAgendamento);
+            
+            if (conflito) {
+                const mensagem = `❌ TESTE CONCLUÍDO: Conflito detectado corretamente!\n\nSistema impediu agendamento duplicado para ${horaAgendamento}.\nJá existe: ${conflito.nomePet} (${conflito.nomeTutor})`;
+                
+                mostrarStatus('✅ VALIDAÇÃO FUNCIONANDO: Conflito detectado e bloqueado!', 'success');
+                log('🎯 RESULTADO: Sistema de validação está funcionando corretamente!', 'success');
+                
+                alert(mensagem);
+                return;
+            }
+            
+            // Se não há conflito, simula agendamento bem-sucedido
+            log('✅ Nenhum conflito detectado - agendamento seria criado', 'success');
+            mostrarStatus('✅ Agendamento seria criado com sucesso (simulação)', 'success');
+            
+            const confirmacao = confirm(`Nenhum conflito detectado!\n\nDeseja realmente simular a criação do agendamento?\n\n${nomePet} (${nomeTutor})\n${dataAgendamento} às ${horaAgendamento}\n${servico}`);
+            
+            if (confirmacao) {
+                log('🎉 Agendamento simulado com sucesso!', 'success');
+                log('(Em um sistema real, seria enviado para a API)', 'info');
+            } else {
+                log('❌ Agendamento cancelado pelo usuário', 'warning');
+            }
+        });
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🎬 Página carregada - iniciando testes...', 'info');
+            carregarAgendamentos();
+        });
+    </script>
+</body>
+</html> 

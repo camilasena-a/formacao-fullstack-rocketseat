@@ -435,6 +435,22 @@ select#appointment-time option:disabled {
   color: var(--content-secondary) !important;
   cursor: not-allowed !important;
   opacity: 0.6 !important;
+  font-style: italic;
+}
+
+/* Estilos específicos para horários ocupados */
+select#appointment-time option:disabled {
+  position: relative;
+}
+
+select#appointment-time option[value*="(Ocupado)"] {
+  color: #ff6b6b !important;
+  background-color: rgba(255, 107, 107, 0.1) !important;
+}
+
+select#appointment-time option[value*="(Indisponível)"] {
+  color: var(--content-tertiary) !important;
+  background-color: rgba(128, 128, 128, 0.1) !important;
 }
 
 /* Responsividade do Modal */

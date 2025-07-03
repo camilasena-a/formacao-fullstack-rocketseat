@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Bloqueio - Mundo Pet</title>
+</head>
+<body>
+    <h1>🐾 Teste de Bloqueio de Horários</h1>
+    
+    <div>
+        <label for="appointment-date">Data:</label>
+        <input type="date" id="appointment-date" value="2025-01-10">
+    </div>
+    
+    <div>
+        <label for="appointment-time">Horário:</label>
+        <select id="appointment-time">
+            <option value="">Carregando...</option>
+        </select>
+    </div>
+    
+    <button onclick="testarBloqueio()">Testar Bloqueio</button>
+    
+    <div>
+        <h3>Log:</h3>
+        <pre id="log-output">Aguardando teste...</pre>
+    </div>
+
+    <script>
+        let logOutput = document.getElementById('log-output');
+        
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logOutput.textContent += `[${timestamp}] ${message}\n`;
+        }
+        
+        async function testarBloqueio() {
+            const data = document.getElementById('appointment-date').value;
+            log(`🚀 Testando para: ${data}`);
+            
+            try {
+                const resposta = await fetch('http://localhost:3333/agendamentos');
+                const agendamentos = await resposta.json();
+                
+                const horariosOcupados = agendamentos
+                    .filter(agendamento => {
+                        const dataAgendamento = new Date(agendamento.dataHora).toISOString().split('T')[0];
+                        return dataAgendamento === data;
+                    })
+                    .map(agendamento => {
+                        const hora = new Date(agendamento.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                        log(`🚫 Ocupado: ${hora} (${agendamento.nomePet})`);
+                        return hora;
+                    });
+                
+                const select = document.getElementById('appointment-time');
+                select.innerHTML = '<option value="">Horário</option>';
+                
+                ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"].forEach(horario => {
+                    const option = document.createElement('option');
+                    option.value = horario;
+                    
+                    if (horariosOcupados.includes(horario)) {
+                        option.disabled = true;
+                        option.textContent = `${horario} (Ocupado)`;
+                        option.style.color = '#ff6b6b';
+                    } else {
+                        option.textContent = horario;
+                    }
+                    
+                    select.appendChild(option);
+                });
+                
+                log(`✅ Teste concluído! ${horariosOcupados.length} horários ocupados`);
+                
+            } catch (error) {
+                log(`❌ Erro: ${error.message}`);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', testarBloqueio);
+    </script>
+</body>
+</html> 

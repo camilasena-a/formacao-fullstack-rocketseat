@@ -34,7 +34,7 @@ export async function agendaDoDia () {
     // busca na API os agendamentos para carregar na tela
     // os horarios disponiveis (horario futuro e não ocupado)
     // renderiza os horarios na tela:
-    horasLoad(data);
+    await horasLoad(data);
     
     await carregaAgendamentosPorData(data);
   } else {
