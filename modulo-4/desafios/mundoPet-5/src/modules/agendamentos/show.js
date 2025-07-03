@@ -17,6 +17,85 @@ function encontrarOuCriarUL(section) {
   return ul
 }
 
+// Função para ordenar agendamentos por horário
+function ordenarAgendamentosPorHorario(agendamentos) {
+  console.log("🔄 Ordenando agendamentos por horário...");
+  
+  return agendamentos.sort((a, b) => {
+    const horaA = dayjs(a.dataHora);
+    const horaB = dayjs(b.dataHora);
+    
+    // Ordenação crescente por horário
+    return horaA.isBefore(horaB) ? -1 : horaA.isAfter(horaB) ? 1 : 0;
+  });
+}
+
+// Função para separar agendamentos por período e ordenar cada período
+function separarEOrdenarPorPeriodo(agendamentos) {
+  const periodos = {
+    manha: [],
+    tarde: [],
+    noite: []
+  };
+  
+  agendamentos.forEach(agendamento => {
+    const hora = dayjs(agendamento.dataHora).hour();
+    
+    if (hora < 12) {
+      periodos.manha.push(agendamento);
+    } else if (hora < 18) {
+      periodos.tarde.push(agendamento);
+    } else {
+      periodos.noite.push(agendamento);
+    }
+  });
+  
+  // Ordena cada período separadamente
+  periodos.manha = ordenarAgendamentosPorHorario(periodos.manha);
+  periodos.tarde = ordenarAgendamentosPorHorario(periodos.tarde);
+  periodos.noite = ordenarAgendamentosPorHorario(periodos.noite);
+  
+  console.log("📊 Agendamentos separados por período:", {
+    manhã: periodos.manha.length,
+    tarde: periodos.tarde.length,
+    noite: periodos.noite.length
+  });
+  
+  return periodos;
+}
+
+// Função para criar elemento LI do agendamento
+function criarElementoAgendamento(agendamento) {
+  const li = document.createElement("li")
+
+  //hora do agendamento
+  const time = document.createElement("time")
+  const agendamentoDayjs = dayjs(agendamento.dataHora)
+  time.textContent = agendamentoDayjs.format("HH:mm")
+
+  //detalhes do cliente
+  const clientDetails = document.createElement("div")
+  clientDetails.classList.add("client-details")
+  clientDetails.innerHTML = `<strong>${agendamento.nomePet}</strong> / ${agendamento.nomeTutor}`
+
+  //detalhes do serviço
+  const service = document.createElement("span")
+  service.textContent = agendamento.servico || "Serviço não especificado"
+  service.classList.add("service")
+
+  //botão de remover agendamento
+  const removeBtn = document.createElement("button")
+  removeBtn.textContent = "Remover agendamento"
+  removeBtn.classList.add("remove-btn")
+
+  //adicionando os elementos ao li
+  li.appendChild(time)
+  li.appendChild(clientDetails)
+  li.appendChild(service)
+  li.appendChild(removeBtn)
+  
+  return li;
+}
 
 export function mostraAgendamentos(agendamentos) {
   console.log("🎯 Função mostraAgendamentos chamada com:", agendamentos);
@@ -53,55 +132,38 @@ export function mostraAgendamentos(agendamentos) {
 
     console.log(`📅 Processando ${agendamentos.length} agendamento(s)`);
 
-    //renderizando por periodo
-    agendamentos.forEach((agendamento, index) => {
-      console.log(`🔄 Processando agendamento ${index + 1}:`, agendamento);
-      
-      const li = document.createElement("li")
+    // 🔄 NOVA FUNCIONALIDADE: Ordenar agendamentos por horário
+    const agendamentosOrdenados = ordenarAgendamentosPorHorario([...agendamentos]);
+    console.log("✅ Agendamentos ordenados por horário:", agendamentosOrdenados.map(ag => ({
+      pet: ag.nomePet,
+      hora: dayjs(ag.dataHora).format("HH:mm")
+    })));
 
-      //hora do agendamento
-      const time = document.createElement("time")
-      const agendamentoDayjs = dayjs(agendamento.dataHora)
-      const hora = agendamentoDayjs.hour()
-      time.textContent = agendamentoDayjs.format("HH:mm")
-      
-      console.log(`⏰ Hora do agendamento: ${hora}h (${time.textContent})`);
+    // Separar agendamentos por período, mantendo ordenação
+    const periodosSeparados = separarEOrdenarPorPeriodo(agendamentosOrdenados);
 
-      //detalhes do cliente
-      const clientDetails = document.createElement("div")
-      clientDetails.classList.add("client-details")
-      clientDetails.innerHTML = `<strong>${agendamento.nomePet}</strong> / ${agendamento.nomeTutor}`
+    // Renderizar agendamentos da manhã
+    periodosSeparados.manha.forEach(agendamento => {
+      console.log(`🌅 Adicionando à manhã: ${agendamento.nomePet} às ${dayjs(agendamento.dataHora).format("HH:mm")}`);
+      const li = criarElementoAgendamento(agendamento);
+      ulManha.appendChild(li);
+    });
 
-      //detalhes do serviço
-      const service = document.createElement("span")
-      service.textContent = agendamento.servico || "Serviço não especificado"
-      service.classList.add("service")
+    // Renderizar agendamentos da tarde
+    periodosSeparados.tarde.forEach(agendamento => {
+      console.log(`🌞 Adicionando à tarde: ${agendamento.nomePet} às ${dayjs(agendamento.dataHora).format("HH:mm")}`);
+      const li = criarElementoAgendamento(agendamento);
+      ulTarde.appendChild(li);
+    });
 
-      //botão de remover agendamento
-      const removeBtn = document.createElement("button")
-      removeBtn.textContent = "Remover agendamento"
-      removeBtn.classList.add("remove-btn")
-
-      //adicionando os elementos ao li
-      li.appendChild(time)
-      li.appendChild(clientDetails)
-      li.appendChild(service)
-      li.appendChild(removeBtn)
-
-      //renderizando os agendamentos conforme periodo
-      if (hora < 12) {
-        console.log(`🌅 Adicionando à manhã: ${agendamento.nomePet}`);
-        ulManha.appendChild(li)
-      } else if (hora < 18) {
-        console.log(`🌞 Adicionando à tarde: ${agendamento.nomePet}`);
-        ulTarde.appendChild(li)
-      } else {
-        console.log(`🌙 Adicionando à noite: ${agendamento.nomePet}`);
-        ulNoite.appendChild(li)
-      }
-    })
+    // Renderizar agendamentos da noite
+    periodosSeparados.noite.forEach(agendamento => {
+      console.log(`🌙 Adicionando à noite: ${agendamento.nomePet} às ${dayjs(agendamento.dataHora).format("HH:mm")}`);
+      const li = criarElementoAgendamento(agendamento);
+      ulNoite.appendChild(li);
+    });
     
-    console.log("✅ Renderização concluída!");
+    console.log("✅ Renderização concluída com ordenação por horário!");
     
   } catch (error) {
     console.error("❌ Erro ao exibir os agendamentos:", error)

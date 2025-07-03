@@ -2,6 +2,7 @@ import dayjs from "dayjs"
 import { novoAgendamento } from "../../services/novo-agendamento"
 import { agendamentoFetchByDay } from "../../services/agendamento-fetchByDay"
 import { agendaDoDia } from "../agendamentos/load"
+import { carregaAgendamentosPorData } from "../agendamentos/load"
 
 const form = document.querySelector(".modal-form")
 const dataFormulario = document.querySelector("#appointment-date")
@@ -80,6 +81,59 @@ function exibirMensagem(mensagem, tipo = 'erro') {
   }, 5000);
 }
 
+// Função para fechar o modal
+function fecharModal() {
+  try {
+    // Tenta usar função global primeiro
+    if (typeof closeModal === 'function') {
+      closeModal();
+    } else {
+      // Fallback manual
+      const modalOverlay = document.getElementById('modal-overlay');
+      if (modalOverlay) {
+        modalOverlay.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        document.body.style.paddingRight = '';
+      }
+    }
+    console.log("✅ Modal fechado com sucesso");
+  } catch (error) {
+    console.error("❌ Erro ao fechar modal:", error);
+  }
+}
+
+// Função para atualizar a página principal
+async function atualizarPaginaPrincipal() {
+  try {
+    console.log("🔄 Atualizando página principal...");
+    
+    // Pega a data de visualização atual
+    const dataVisualizacao = document.querySelector("#data-visualizacao");
+    if (dataVisualizacao && dataVisualizacao.value) {
+      console.log(`📅 Recarregando agendamentos para: ${dataVisualizacao.value}`);
+      
+      // Recarrega os agendamentos da página principal
+      await carregaAgendamentosPorData(dataVisualizacao.value);
+      
+      console.log("✅ Página principal atualizada com sucesso");
+    } else {
+      console.log("⚠️ Data de visualização não encontrada, recarregando página...");
+      
+      // Se não conseguir encontrar a data, recarrega a página inteira
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  } catch (error) {
+    console.error("❌ Erro ao atualizar página principal:", error);
+    
+    // Em caso de erro, recarrega a página
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  }
+}
+
 form.onsubmit = async (event) => {
   event.preventDefault()
   
@@ -130,31 +184,35 @@ form.onsubmit = async (event) => {
     // Cria o agendamento
     await novoAgendamento({dataHora, id, nomeTutor, nomePet, servico})
     
-    // Sucesso!
+    // Sucesso! 
+    console.log("🎉 Agendamento criado com sucesso!");
     exibirMensagem("✅ Agendamento criado com sucesso!", 'sucesso');
     
     // Limpa o formulário
     form.reset();
     dataFormulario.value = dataAtual; // Restaura data padrão
     
-    // Recarrega os horários disponíveis para refletir o novo agendamento
-    console.log("🔄 Recarregando horários disponíveis...");
-    await agendaDoDia();
+
     
-    // Fecha o modal após 2 segundos
-    setTimeout(() => {
-      if (typeof closeModal === 'function') {
-        closeModal();
-      } else {
-        document.getElementById('modal-overlay').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        document.body.style.paddingRight = '';
-      }
-    }, 2000);
+    // Aguarda 1 segundo para dar tempo do usuário ver a mensagem
+    setTimeout(async () => {
+      console.log("🔄 Iniciando atualização da página...");
+      
+      // Fecha o modal
+      fecharModal();
+      
+      // Atualiza a página principal
+      await atualizarPaginaPrincipal();
+      
+      console.log("✅ Processo completo! Modal fechado e página atualizada.");
+    }, 1000);
     
   } catch (error) {
     console.error("❌ Erro ao enviar o formulário:", error);
     exibirMensagem("Erro ao criar agendamento. Tente novamente.", 'erro');
-    alert("❌ Erro ao enviar o formulário. Verifique sua conexão e tente novamente.");
+    
+    // Mensagem de erro mais detalhada
+    const mensagemErro = `❌ Erro ao criar agendamento!\n\n${error.message}\n\nVerifique sua conexão com a internet e tente novamente.`;
+    alert(mensagemErro);
   }
 }

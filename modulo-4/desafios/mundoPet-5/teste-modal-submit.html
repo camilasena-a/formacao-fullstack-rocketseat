@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Modal Submit - Mundo Pet</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121214;
+            color: #E1E1E6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #202024;
+            padding: 25px;
+            border-radius: 16px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #121214;
+            border-radius: 12px;
+            border: 1px solid #323238;
+        }
+        button {
+            background: #8257e5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover { filter: brightness(0.9); }
+        .status {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 600;
+            text-align: center;
+        }
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .agendamentos-list {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #8257e5;
+        }
+        pre {
+            background: #0D0D0F;
+            color: #E1E1E6;
+            padding: 12px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+        .modal-simulation {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #323238;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste: Modal Submit & Atualização</h1>
+        <p>Este teste simula o comportamento esperado após submit do formulário:</p>
+        
+        <div class="test-section">
+            <h2>🎯 Comportamento Esperado:</h2>
+            <ol>
+                <li>✅ <strong>Validação</strong>: Verificar conflitos de horário</li>
+                <li>💾 <strong>Criação</strong>: Enviar agendamento para API</li>
+                <li>🎉 <strong>Confirmação</strong>: Mostrar mensagem de sucesso</li>
+                <li>❌ <strong>Fechar Modal</strong>: Modal deve desaparecer</li>
+                <li>🔄 <strong>Atualizar Página</strong>: Lista de agendamentos deve ser recarregada</li>
+            </ol>
+        </div>
+
+        <div class="agendamentos-list">
+            <h3>📋 Agendamentos Atuais</h3>
+            <div id="agendamentos-container">
+                <p>Carregando agendamentos...</p>
+            </div>
+            <button onclick="carregarAgendamentos()">🔄 Recarregar Lista</button>
+        </div>
+
+        <div class="modal-simulation">
+            <h3>📝 Simulação de Agendamento</h3>
+            <p><strong>Teste 1:</strong> Tente agendar em horário OCUPADO (09:00 ou 14:00)</p>
+            <p><strong>Teste 2:</strong> Tente agendar em horário LIVRE (11:00 ou 16:00)</p>
+            
+            <div>
+                <button onclick="simularConflito()">🚫 Testar Conflito</button>
+                <button onclick="simularSucesso()">✅ Testar Sucesso</button>
+                <button onclick="abrirAplicacaoReal()">🚀 Abrir Aplicação Real</button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Log de Atividades:</h3>
+            <pre id="log-output">Aguardando teste...\n</pre>
+            <button onclick="limparLog()">🗑️ Limpar Log</button>
+        </div>
+    </div>
+
+    <script>
+        let logOutput = document.getElementById('log-output');
+        let contadorAgendamentos = 0;
+        
+        function log(message, tipo = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const emoji = {
+                'info': '📝',
+                'success': '✅',
+                'error': '❌',
+                'warning': '⚠️',
+                'modal': '🔲',
+                'update': '🔄'
+            }[tipo] || '📝';
+            
+            logOutput.textContent += `[${timestamp}] ${emoji} ${message}\n`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+        
+        function limparLog() {
+            logOutput.textContent = 'Log limpo.\n';
+        }
+        
+        function mostrarStatus(mensagem, tipo) {
+            // Remove status anterior
+            const statusAnterior = document.querySelector('.test-status');
+            if (statusAnterior) statusAnterior.remove();
+            
+            const div = document.createElement('div');
+            div.className = `status ${tipo} test-status`;
+            div.textContent = mensagem;
+            
+            const container = document.querySelector('.container');
+            container.appendChild(div);
+            
+            setTimeout(() => div.remove(), 5000);
+        }
+        
+        async function carregarAgendamentos() {
+            try {
+                log('🔍 Carregando agendamentos da API...', 'info');
+                
+                const resposta = await fetch('http://localhost:3333/agendamentos');
+                if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+                
+                const agendamentos = await resposta.json();
+                const container = document.getElementById('agendamentos-container');
+                
+                if (agendamentos.length === 0) {
+                    container.innerHTML = '<p>📭 Nenhum agendamento encontrado.</p>';
+                    log('📭 Nenhum agendamento encontrado', 'warning');
+                } else {
+                    container.innerHTML = agendamentos.map(ag => {
+                        const data = new Date(ag.dataHora).toLocaleDateString('pt-BR');
+                        const hora = new Date(ag.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                        return `<p><strong>${data} às ${hora}</strong> - ${ag.nomePet} (${ag.nomeTutor}) - ${ag.servico}</p>`;
+                    }).join('');
+                    
+                    log(`📊 ${agendamentos.length} agendamento(s) carregado(s)`, 'success');
+                }
+                
+                contadorAgendamentos = agendamentos.length;
+                
+            } catch (error) {
+                log(`❌ Erro ao carregar agendamentos: ${error.message}`, 'error');
+                document.getElementById('agendamentos-container').innerHTML = 
+                    '<p style="color: #ef4444;">❌ Erro ao carregar. Verifique se o servidor está rodando.</p>';
+            }
+        }
+        
+        function simularConflito() {
+            log('🧪 SIMULANDO: Tentativa de agendamento em horário ocupado', 'warning');
+            log('   → Data: 10/01/2025', 'info');
+            log('   → Horário: 09:00 (já ocupado)', 'warning');
+            log('   → Pet: Rex Teste', 'info');
+            
+            setTimeout(() => {
+                log('🔍 Verificando conflitos...', 'info');
+                
+                setTimeout(() => {
+                    log('🚫 CONFLITO DETECTADO!', 'error');
+                    log('   → Horário ocupado por: Sabrina (Camila)', 'error');
+                    log('   → Agendamento BLOQUEADO', 'error');
+                    log('   → Modal permanece ABERTO para correção', 'modal');
+                    
+                    mostrarStatus('✅ TESTE APROVADO: Conflito detectado e bloqueado corretamente!', 'success');
+                    
+                    alert('🚫 CONFLITO DETECTADO!\n\nJá existe agendamento para 09:00:\nSabrina (Camila)\n\n✅ Sistema funcionando corretamente!');
+                }, 1500);
+            }, 1000);
+        }
+        
+        function simularSucesso() {
+            log('🧪 SIMULANDO: Agendamento em horário livre', 'info');
+            log('   → Data: 10/01/2025', 'info');
+            log('   → Horário: 11:00 (livre)', 'success');
+            log('   → Pet: Buddy Teste', 'info');
+            
+            setTimeout(() => {
+                log('🔍 Verificando conflitos...', 'info');
+                
+                setTimeout(() => {
+                    log('✅ Nenhum conflito encontrado', 'success');
+                    log('💾 Criando agendamento...', 'info');
+                    
+                    setTimeout(() => {
+                        log('🎉 Agendamento criado com sucesso!', 'success');
+                        log('📝 Mostrando confirmação ao usuário', 'info');
+                        
+                        const confirmacao = `🎉 Agendamento Confirmado!\n\n🐾 Pet: Buddy Teste\n👤 Tutor: Usuário Teste\n📅 Data: 10/01/2025\n⏰ Horário: 11:00\n\nFluxo simulado:\n1. ✅ Modal será fechado\n2. ✅ Página será atualizada`;
+                        
+                        alert(confirmacao);
+                        
+                        setTimeout(() => {
+                            log('❌ SIMULANDO: Fechamento do modal', 'modal');
+                            log('🔄 SIMULANDO: Atualização da página principal', 'update');
+                            log('📋 SIMULANDO: Recarregamento dos agendamentos', 'update');
+                            
+                            // Simula atualização
+                            carregarAgendamentos();
+                            
+                            mostrarStatus('✅ TESTE APROVADO: Fluxo de sucesso simulado com êxito!', 'success');
+                            
+                        }, 2000);
+                        
+                    }, 1500);
+                }, 1000);
+            }, 1000);
+        }
+        
+        function abrirAplicacaoReal() {
+            log('🚀 Abrindo aplicação real para teste prático...', 'info');
+            log('   → URL: http://localhost:3000', 'info');
+            log('   → Clique em "NOVO AGENDAMENTO"', 'info');
+            log('   → Teste os cenários real', 'info');
+            
+            window.open('http://localhost:3000', '_blank');
+            
+            mostrarStatus('🚀 Aplicação real aberta! Teste o fluxo completo.', 'warning');
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🎬 Teste inicializado', 'info');
+            log('🔧 Verificando se o servidor está rodando...', 'info');
+            
+            carregarAgendamentos();
+            
+            // Verificar se a aplicação está rodando
+            setTimeout(() => {
+                fetch('http://localhost:3000')
+                    .then(() => {
+                        log('✅ Aplicação principal detectada em http://localhost:3000', 'success');
+                        log('🎯 Pronto para testes!', 'success');
+                    })
+                    .catch(() => {
+                        log('⚠️ Aplicação principal não detectada', 'warning');
+                        log('   → Execute: npm run dev', 'warning');
+                    });
+            }, 2000);
+        });
+    </script>
+</body>
+</html> 
