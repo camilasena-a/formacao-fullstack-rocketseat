@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Debug - Mundo Pet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .log-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 Mundo Pet - Teste Debug</h1>
+        
+        <div>
+            <h2>Testes de API</h2>
+            <button onclick="testarAPI()">Testar API (/agendamentos)</button>
+            <button onclick="testarFiltro()">Testar Filtro por Data</button>
+            <button onclick="limparLog()">Limpar Log</button>
+        </div>
+        
+        <div class="log-section">
+            <h3>Log de Resultados:</h3>
+            <pre id="log-output">Clique nos botões acima para testar...</pre>
+        </div>
+    </div>
+
+    <script>
+        let logOutput = document.getElementById('log-output');
+        
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logOutput.textContent += `[${timestamp}] ${message}\n`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+        
+        function limparLog() {
+            logOutput.textContent = '';
+        }
+        
+        async function testarAPI() {
+            try {
+                log('🚀 Iniciando teste da API...');
+                
+                const response = await fetch('http://localhost:3333/agendamentos');
+                log(`📡 Status da resposta: ${response.status}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                log(`📊 Dados recebidos: ${JSON.stringify(data, null, 2)}`);
+                log(`✅ API funcionando! ${data.length} agendamentos encontrados.`);
+                
+            } catch (error) {
+                log(`❌ Erro ao testar API: ${error.message}`);
+            }
+        }
+        
+        async function testarFiltro() {
+            try {
+                log('🔍 Testando filtro por data...');
+                
+                const response = await fetch('http://localhost:3333/agendamentos');
+                const agendamentos = await response.json();
+                
+                const dataFiltro = '2025-01-10';
+                log(`📅 Filtrando para a data: ${dataFiltro}`);
+                
+                const agendamentosFiltrados = agendamentos.filter(agendamento => {
+                    const dataAgendamento = new Date(agendamento.dataHora);
+                    const dataFiltroDate = new Date(dataFiltro);
+                    
+                    const mesmaData = dataAgendamento.toDateString() === dataFiltroDate.toDateString();
+                    
+                    log(`  📍 Agendamento ${agendamento.nomePet}: ${dataAgendamento.toDateString()} === ${dataFiltroDate.toDateString()} = ${mesmaData}`);
+                    
+                    return mesmaData;
+                });
+                
+                log(`✅ Filtro concluído! ${agendamentosFiltrados.length} agendamentos encontrados para ${dataFiltro}`);
+                log(`📋 Agendamentos filtrados: ${JSON.stringify(agendamentosFiltrados, null, 2)}`);
+                
+            } catch (error) {
+                log(`❌ Erro ao testar filtro: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html> 

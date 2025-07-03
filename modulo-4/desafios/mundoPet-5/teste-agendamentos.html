@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Agendamentos - Mundo Pet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .date-picker {
+            margin: 20px 0;
+        }
+        .date-picker input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .schedule {
+            margin-top: 20px;
+        }
+        .period {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .period-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .period ul {
+            list-style: none;
+            padding: 0;
+        }
+        .period li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .client-details {
+            flex: 1;
+        }
+        .service {
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .log-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 Teste de Agendamentos</h1>
+        
+        <div class="date-picker">
+            <label for="data-visualizacao">Data de Visualização:</label>
+            <input type="date" id="data-visualizacao" value="2025-01-10">
+        </div>
+
+        <div class="schedule">
+            <section class="period">
+                <div class="period-title">
+                    <h2>Manhã</h2>
+                    <time>09h-12h</time>
+                </div>
+            </section>
+
+            <section class="period">
+                <div class="period-title">
+                    <h2>Tarde</h2>
+                    <time>13h-18h</time>
+                </div>
+            </section>
+
+            <section class="period">
+                <div class="period-title">
+                    <h2>Noite</h2>
+                    <time>19h-21h</time>
+                </div>
+            </section>
+        </div>
+        
+        <div class="log-section">
+            <h3>Log de Debug:</h3>
+            <pre id="log-output">Iniciando teste...</pre>
+        </div>
+    </div>
+
+    <script>
+        let logOutput = document.getElementById('log-output');
+        
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logOutput.textContent += `[${timestamp}] ${message}\n`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+        
+        // Simula o dayjs
+        function dayjs(date) {
+            const d = new Date(date);
+            return {
+                format: (fmt) => {
+                    if (fmt === 'YYYY-MM-DD') {
+                        return d.toISOString().split('T')[0];
+                    }
+                    if (fmt === 'HH:mm') {
+                        return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                    }
+                    return d.toISOString();
+                },
+                hour: () => d.getHours()
+            };
+        }
+        
+        // Simula a função de busca de agendamentos
+        async function agendamentoFetchByDay(data) {
+            try {
+                log('🔍 Buscando agendamentos para a data: ' + data);
+                
+                const resposta = await fetch('http://localhost:3333/agendamentos');
+                const datasResposta = await resposta.json();
+                
+                log('📊 Dados recebidos da API: ' + JSON.stringify(datasResposta, null, 2));
+                
+                const agendaDoDia = datasResposta.filter(agendamento => {
+                    const dataAgendamento = dayjs(agendamento.dataHora);
+                    const dataBusca = dayjs(data);
+                    
+                    log('🗓️ Comparando:');
+                    log('  Data do agendamento: ' + dataAgendamento.format('YYYY-MM-DD'));
+                    log('  Data da busca: ' + dataBusca.format('YYYY-MM-DD'));
+                    
+                    const saoIguais = dataAgendamento.format('YYYY-MM-DD') === dataBusca.format('YYYY-MM-DD');
+                    log('  São iguais? ' + saoIguais);
+                    
+                    return saoIguais;
+                });
+                
+                log('✅ Agendamentos filtrados: ' + JSON.stringify(agendaDoDia, null, 2));
+                return agendaDoDia;
+            } catch (error) {
+                log('❌ Erro ao buscar agendamentos: ' + error.message);
+                throw new Error('Erro ao buscar agendamentos');
+            }
+        }
+        
+        // Simula a função de mostrar agendamentos
+        function mostraAgendamentos(agendamentos) {
+            log('🎯 Função mostraAgendamentos chamada com: ' + JSON.stringify(agendamentos, null, 2));
+            
+            try {
+                const periodos = document.querySelectorAll('.period');
+                const periodoManha = periodos[0];
+                const periodoTarde = periodos[1];
+                const periodoNoite = periodos[2];
+                
+                if (!periodoManha || !periodoTarde || !periodoNoite) {
+                    log('❌ Elementos de período não encontrados no DOM');
+                    return;
+                }
+                
+                log('✅ Elementos de período encontrados');
+                
+                // Encontra ou cria os UL para cada período
+                function encontrarOuCriarUL(section) {
+                    let ul = section.querySelector('ul');
+                    if (!ul) {
+                        ul = document.createElement('ul');
+                        section.appendChild(ul);
+                    }
+                    return ul;
+                }
+                
+                const ulManha = encontrarOuCriarUL(periodoManha);
+                const ulTarde = encontrarOuCriarUL(periodoTarde);
+                const ulNoite = encontrarOuCriarUL(periodoNoite);
+                
+                log('📋 ULs criados/encontrados');
+                
+                // Limpa o conteúdo anterior
+                ulManha.innerHTML = '';
+                ulTarde.innerHTML = '';
+                ulNoite.innerHTML = '';
+                
+                if (!agendamentos || agendamentos.length === 0) {
+                    log('⚠️ Nenhum agendamento encontrado para exibir');
+                    return;
+                }
+                
+                log(`📅 Processando ${agendamentos.length} agendamento(s)`);
+                
+                agendamentos.forEach((agendamento, index) => {
+                    log(`🔄 Processando agendamento ${index + 1}: ${agendamento.nomePet}`);
+                    
+                    const li = document.createElement('li');
+                    
+                    const time = document.createElement('time');
+                    const agendamentoDayjs = dayjs(agendamento.dataHora);
+                    const hora = agendamentoDayjs.hour();
+                    time.textContent = agendamentoDayjs.format('HH:mm');
+                    
+                    log(`⏰ Hora do agendamento: ${hora}h (${time.textContent})`);
+                    
+                    const clientDetails = document.createElement('div');
+                    clientDetails.classList.add('client-details');
+                    clientDetails.innerHTML = `<strong>${agendamento.nomePet}</strong> / ${agendamento.nomeTutor}`;
+                    
+                    const service = document.createElement('span');
+                    service.textContent = agendamento.servico || 'Serviço não especificado';
+                    service.classList.add('service');
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.textContent = 'Remover agendamento';
+                    removeBtn.classList.add('remove-btn');
+                    
+                    li.appendChild(time);
+                    li.appendChild(clientDetails);
+                    li.appendChild(service);
+                    li.appendChild(removeBtn);
+                    
+                    if (hora < 12) {
+                        log(`🌅 Adicionando à manhã: ${agendamento.nomePet}`);
+                        ulManha.appendChild(li);
+                    } else if (hora < 18) {
+                        log(`🌞 Adicionando à tarde: ${agendamento.nomePet}`);
+                        ulTarde.appendChild(li);
+                    } else {
+                        log(`🌙 Adicionando à noite: ${agendamento.nomePet}`);
+                        ulNoite.appendChild(li);
+                    }
+                });
+                
+                log('✅ Renderização concluída!');
+                
+            } catch (error) {
+                log('❌ Erro ao exibir os agendamentos: ' + error.message);
+            }
+        }
+        
+        // Função principal
+        async function carregaAgendamentosPorData(data) {
+            try {
+                log('🚀 Iniciando carregamento de agendamentos para: ' + data);
+                const agendamentos = await agendamentoFetchByDay(data);
+                log('📦 Agendamentos retornados: ' + JSON.stringify(agendamentos, null, 2));
+                
+                mostraAgendamentos(agendamentos);
+            } catch (error) {
+                log('❌ Erro ao buscar ou exibir agendamentos: ' + error.message);
+            }
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🎬 DOM carregado, iniciando teste...');
+            
+            const dataVisualizacao = document.querySelector('#data-visualizacao');
+            if (dataVisualizacao) {
+                log('✅ Input de data encontrado: ' + dataVisualizacao.value);
+                
+                // Carrega agendamentos iniciais
+                carregaAgendamentosPorData(dataVisualizacao.value);
+                
+                // Listener para mudanças na data
+                dataVisualizacao.addEventListener('change', () => {
+                    log('🔄 Data alterada para: ' + dataVisualizacao.value);
+                    carregaAgendamentosPorData(dataVisualizacao.value);
+                });
+            } else {
+                log('❌ Input de data não encontrado!');
+            }
+        });
+    </script>
+</body>
+</html> 

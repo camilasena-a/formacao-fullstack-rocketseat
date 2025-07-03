@@ -1,5 +1,2 @@
-import { agendaDoDia } from "./agendamentos/load.js";
-
-document.addEventListener("DOMContentLoaded", () => {
-    agendaDoDia();
-});
+// Arquivo removido - a inicialização agora é feita diretamente no load.js
+// para evitar conflitos e dupla inicialização

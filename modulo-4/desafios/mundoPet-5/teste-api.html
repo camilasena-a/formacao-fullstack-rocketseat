@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste API</title>
+</head>
+<body>
+    <h1>Teste da API</h1>
+    <button onclick="testarAPI()">Testar Conexão com API</button>
+    <div id="resultado"></div>
+
+    <script>
+        async function testarAPI() {
+            const resultado = document.getElementById('resultado');
+            resultado.innerHTML = 'Testando...';
+            
+            try {
+                console.log('Testando conexão com http://localhost:3333/agendamentos');
+                const resposta = await fetch('http://localhost:3333/agendamentos');
+                
+                if (!resposta.ok) {
+                    throw new Error(`Erro HTTP: ${resposta.status} - ${resposta.statusText}`);
+                }
+                
+                const dados = await resposta.json();
+                console.log('Dados recebidos:', dados);
+                
+                resultado.innerHTML = `
+                    <h2>✅ Sucesso!</h2>
+                    <p>Status: ${resposta.status}</p>
+                    <p>Total de agendamentos: ${dados.length}</p>
+                    <pre>${JSON.stringify(dados, null, 2)}</pre>
+                `;
+            } catch (error) {
+                console.error('Erro:', error);
+                resultado.innerHTML = `
+                    <h2>❌ Erro!</h2>
+                    <p>${error.message}</p>
+                    <p><strong>Verifique se o servidor JSON está rodando:</strong></p>
+                    <code>npm run server</code>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 

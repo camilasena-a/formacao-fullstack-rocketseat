@@ -37,7 +37,7 @@ form.onsubmit = async (event) => {
     const id = new Date().getTime()
 
     console.log({dataHora, id,nomeTutor, nomePet})
-    await novoAgendamento({dataHora, id,nomeTutor, nomePet})
+    await novoAgendamento({dataHora, id,nomeTutor, nomePet, servico})
   } catch (error) {
     alert("Erro ao enviar o formulário")
     console.log(error)
