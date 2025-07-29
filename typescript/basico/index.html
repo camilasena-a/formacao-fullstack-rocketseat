@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeScript Básico - Notas de Aula</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TypeScript Básico</h1>
+            <p class="subtitle">Notas de Aula - Formação Full Stack</p>
+        </header>
+
+        <nav class="table-of-contents">
+            <h2>Sumário</h2>
+            <ul>
+                <li><a href="#introducao">1. Introdução</a></li>
+                <li><a href="#instalacao">2. Instalação e Configuração</a></li>
+                <li><a href="#tipos-basicos">3. Tipos Básicos</a></li>
+                <li><a href="#interfaces">4. Interfaces</a></li>
+                <li><a href="#classes">5. Classes</a></li>
+                <li><a href="#funcoes">6. Funções</a></li>
+                <li><a href="#exemplos">7. Exemplos Práticos</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <section id="introducao">
+                <h2>1. Introdução</h2>
+                <p>
+                    TypeScript é um superconjunto do JavaScript que adiciona tipagem estática opcional à linguagem. 
+                    Desenvolvido pela Microsoft, ele é compilado para JavaScript puro, mantendo compatibilidade 
+                    com qualquer ambiente que execute JavaScript.
+                </p>
+                
+                <div class="highlight-box">
+                    <h3>Principais Vantagens:</h3>
+                    <ul>
+                        <li>🔍 <strong>Detecção de erros em tempo de desenvolvimento</strong></li>
+                        <li>📚 <strong>Melhor IntelliSense e autocomplete</strong></li>
+                        <li>🔧 <strong>Refatoração mais segura</strong></li>
+                        <li>📖 <strong>Código mais legível e documentado</strong></li>
+                        <li>🚀 <strong>Melhor suporte para projetos grandes</strong></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="instalacao">
+                <h2>2. Instalação e Configuração</h2>
+                
+                <h3>Instalação Global</h3>
+                <div class="code-block">
+                    <code>npm install -g typescript</code>
+                </div>
+
+                <h3>Verificar Instalação</h3>
+                <div class="code-block">
+                    <code>tsc --version</code>
+                </div>
+
+                <h3>Compilar um arquivo TypeScript</h3>
+                <div class="code-block">
+                    <code>tsc arquivo.ts</code>
+                </div>
+
+                <h3>Arquivo de Configuração (tsconfig.json)</h3>
+                <div class="code-block">
+<pre>{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true
+  }
+}</pre>
+                </div>
+            </section>
+
+            <section id="tipos-basicos">
+                <h2>3. Tipos Básicos</h2>
+
+                <h3>Tipos Primitivos</h3>
+                <div class="code-block">
+<pre>// String
+let nome: string = "João";
+let sobrenome: string = 'Silva';
+
+// Number
+let idade: number = 25;
+let altura: number = 1.75;
+
+// Boolean
+let ativo: boolean = true;
+let inativo: boolean = false;
+
+// Array
+let numeros: number[] = [1, 2, 3, 4, 5];
+let nomes: Array&lt;string&gt; = ["Ana", "Carlos", "Maria"];
+
+// Tuple
+let pessoa: [string, number] = ["João", 30];
+
+// Any (evitar usar quando possível)
+let qualquerCoisa: any = "pode ser qualquer tipo";
+
+// Void (para funções que não retornam valor)
+function mostrarMensagem(): void {
+    console.log("Olá, TypeScript!");
+}
+
+// Null e Undefined
+let nulo: null = null;
+let indefinido: undefined = undefined;</pre>
+                </div>
+
+                <h3>Union Types</h3>
+                <div class="code-block">
+<pre>// Variável que pode ser string ou number
+let id: string | number;
+id = "abc123";
+id = 123;
+
+// Array com tipos mistos
+let dados: (string | number)[] = ["João", 30, "Desenvolvedor", 5000];</pre>
+                </div>
+
+                <h3>Type Aliases</h3>
+                <div class="code-block">
+<pre>type ID = string | number;
+type Status = "ativo" | "inativo" | "pendente";
+
+let usuarioId: ID = "user_123";
+let statusUsuario: Status = "ativo";</pre>
+                </div>
+            </section>
+
+            <section id="interfaces">
+                <h2>4. Interfaces</h2>
+                
+                <p>Interfaces definem a estrutura de objetos, especificando quais propriedades e métodos devem estar presentes.</p>
+
+                <div class="code-block">
+<pre>// Definindo uma interface
+interface Usuario {
+    id: number;
+    nome: string;
+    email: string;
+    idade?: number; // Propriedade opcional
+    readonly criadoEm: Date; // Propriedade somente leitura
+}
+
+// Usando a interface
+const usuario: Usuario = {
+    id: 1,
+    nome: "Maria Silva",
+    email: "maria@email.com",
+    criadoEm: new Date()
+};
+
+// Interface para função
+interface CalculadoraOperacao {
+    (a: number, b: number): number;
+}
+
+const somar: CalculadoraOperacao = (x, y) => x + y;
+const multiplicar: CalculadoraOperacao = (x, y) => x * y;</pre>
+                </div>
+
+                <h3>Extensão de Interfaces</h3>
+                <div class="code-block">
+<pre>interface Pessoa {
+    nome: string;
+    idade: number;
+}
+
+interface Funcionario extends Pessoa {
+    cargo: string;
+    salario: number;
+}
+
+const funcionario: Funcionario = {
+    nome: "Carlos",
+    idade: 30,
+    cargo: "Desenvolvedor",
+    salario: 5000
+};</pre>
+                </div>
+            </section>
+
+            <section id="classes">
+                <h2>5. Classes</h2>
+
+                <div class="code-block">
+<pre>class Animal {
+    // Propriedades
+    protected nome: string;
+    private idade: number;
+    public especie: string;
+
+    // Construtor
+    constructor(nome: string, idade: number, especie: string) {
+        this.nome = nome;
+        this.idade = idade;
+        this.especie = especie;
+    }
+
+    // Método público
+    public falar(): void {
+        console.log(`${this.nome} está fazendo som`);
+    }
+
+    // Método protegido
+    protected dormir(): void {
+        console.log(`${this.nome} está dormindo`);
+    }
+
+    // Getter
+    get getNome(): string {
+        return this.nome;
+    }
+
+    // Setter
+    set setNome(novoNome: string) {
+        this.nome = novoNome;
+    }
+}
+
+// Herança
+class Cachorro extends Animal {
+    private raca: string;
+
+    constructor(nome: string, idade: number, raca: string) {
+        super(nome, idade, "Canino");
+        this.raca = raca;
+    }
+
+    public latir(): void {
+        console.log(`${this.nome} está latindo: Au au!`);
+    }
+
+    // Sobrescrita de método
+    public falar(): void {
+        this.latir();
+    }
+}
+
+// Usando as classes
+const meuCachorro = new Cachorro("Rex", 3, "Golden Retriever");
+meuCachorro.falar(); // Rex está latindo: Au au!</pre>
+                </div>
+            </section>
+
+            <section id="funcoes">
+                <h2>6. Funções</h2>
+
+                <h3>Declaração de Funções</h3>
+                <div class="code-block">
+<pre>// Função com tipos explícitos
+function somar(a: number, b: number): number {
+    return a + b;
+}
+
+// Arrow function
+const multiplicar = (a: number, b: number): number => {
+    return a * b;
+};
+
+// Parâmetros opcionais
+function cumprimentar(nome: string, sobrenome?: string): string {
+    if (sobrenome) {
+        return `Olá, ${nome} ${sobrenome}!`;
+    }
+    return `Olá, ${nome}!`;
+}
+
+// Parâmetros com valor padrão
+function criarUsuario(nome: string, idade: number = 18): Usuario {
+    return {
+        id: Math.random(),
+        nome,
+        email: `${nome}@email.com`,
+        idade,
+        criadoEm: new Date()
+    };
+}
+
+// Rest parameters
+function calcularMedia(...numeros: number[]): number {
+    const soma = numeros.reduce((acc, num) => acc + num, 0);
+    return soma / numeros.length;
+}</pre>
+                </div>
+
+                <h3>Overload de Funções</h3>
+                <div class="code-block">
+<pre>// Declarações de overload
+function formatar(valor: string): string;
+function formatar(valor: number): string;
+function formatar(valor: boolean): string;
+
+// Implementação
+function formatar(valor: string | number | boolean): string {
+    if (typeof valor === 'string') {
+        return valor.toUpperCase();
+    }
+    if (typeof valor === 'number') {
+        return valor.toFixed(2);
+    }
+    return valor ? 'SIM' : 'NÃO';
+}</pre>
+                </div>
+            </section>
+
+            <section id="exemplos">
+                <h2>7. Exemplos Práticos</h2>
+
+                <h3>Sistema de Tarefas (Todo List)</h3>
+                <div class="code-block">
+<pre>// Definindo tipos
+type StatusTarefa = 'pendente' | 'em-progresso' | 'concluida';
+
+interface Tarefa {
+    id: number;
+    titulo: string;
+    descricao?: string;
+    status: StatusTarefa;
+    criadaEm: Date;
+    concluidaEm?: Date;
+}
+
+// Classe para gerenciar tarefas
+class GerenciadorTarefas {
+    private tarefas: Tarefa[] = [];
+    private proximoId: number = 1;
+
+    adicionarTarefa(titulo: string, descricao?: string): Tarefa {
+        const novaTarefa: Tarefa = {
+            id: this.proximoId++,
+            titulo,
+            descricao,
+            status: 'pendente',
+            criadaEm: new Date()
+        };
+
+        this.tarefas.push(novaTarefa);
+        return novaTarefa;
+    }
+
+    alterarStatus(id: number, novoStatus: StatusTarefa): boolean {
+        const tarefa = this.tarefas.find(t => t.id === id);
+        
+        if (!tarefa) return false;
+
+        tarefa.status = novoStatus;
+        
+        if (novoStatus === 'concluida') {
+            tarefa.concluidaEm = new Date();
+        }
+
+        return true;
+    }
+
+    listarTarefas(status?: StatusTarefa): Tarefa[] {
+        if (status) {
+            return this.tarefas.filter(t => t.status === status);
+        }
+        return [...this.tarefas];
+    }
+
+    removerTarefa(id: number): boolean {
+        const indice = this.tarefas.findIndex(t => t.id === id);
+        
+        if (indice === -1) return false;
+        
+        this.tarefas.splice(indice, 1);
+        return true;
+    }
+}
+
+// Exemplo de uso
+const gerenciador = new GerenciadorTarefas();
+
+gerenciador.adicionarTarefa(
+    "Estudar TypeScript", 
+    "Revisar conceitos básicos e fazer exercícios"
+);
+
+gerenciador.adicionarTarefa("Fazer compras");
+
+console.log(gerenciador.listarTarefas());
+gerenciador.alterarStatus(1, 'concluida');
+console.log(gerenciador.listarTarefas('concluida'));</pre>
+                </div>
+
+                <h3>API de Usuários</h3>
+                <div class="code-block">
+<pre>// Definindo tipos para API
+interface RespostaAPI&lt;T&gt; {
+    sucesso: boolean;
+    dados?: T;
+    erro?: string;
+}
+
+interface UsuarioAPI {
+    id: string;
+    nome: string;
+    email: string;
+    avatar?: string;
+}
+
+// Simulação de classe para API
+class UsuarioService {
+    private usuarios: UsuarioAPI[] = [];
+
+    async buscarUsuario(id: string): Promise&lt;RespostaAPI&lt;UsuarioAPI&gt;&gt; {
+        try {
+            const usuario = this.usuarios.find(u => u.id === id);
+            
+            if (!usuario) {
+                return {
+                    sucesso: false,
+                    erro: "Usuário não encontrado"
+                };
+            }
+
+            return {
+                sucesso: true,
+                dados: usuario
+            };
+        } catch (error) {
+            return {
+                sucesso: false,
+                erro: "Erro interno do servidor"
+            };
+        }
+    }
+
+    async criarUsuario(dadosUsuario: Omit&lt;UsuarioAPI, 'id'&gt;): Promise&lt;RespostaAPI&lt;UsuarioAPI&gt;&gt; {
+        try {
+            const novoUsuario: UsuarioAPI = {
+                id: Math.random().toString(36).substr(2, 9),
+                ...dadosUsuario
+            };
+
+            this.usuarios.push(novoUsuario);
+
+            return {
+                sucesso: true,
+                dados: novoUsuario
+            };
+        } catch (error) {
+            return {
+                sucesso: false,
+                erro: "Erro ao criar usuário"
+            };
+        }
+    }
+}</pre>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="tips">
+                <h3>💡 Dicas Importantes:</h3>
+                <ul>
+                    <li>Use <code>strict: true</code> no tsconfig.json para máxima segurança de tipos</li>
+                    <li>Evite usar <code>any</code> - prefira union types ou unknown</li>
+                    <li>Utilize interfaces para definir contratos claros</li>
+                    <li>Aproveite o IntelliSense do seu editor para descobrir métodos e propriedades</li>
+                    <li>Configure seu editor para mostrar erros de TypeScript em tempo real</li>
+                </ul>
+            </div>
+            
+            <p class="footer-text">
+                📚 <strong>Formação Full Stack RocketSeat</strong> - Notas de Aula TypeScript Básico
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
