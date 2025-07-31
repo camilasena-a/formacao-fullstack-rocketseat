@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Types e Type Annotations - TypeScript</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background-color: #0d1117;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #161b22;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border: 1px solid #30363d;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #007acc, #005a9f);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .content p {
+            color: #c9d1d9;
+        }
+
+        .content li {
+            color: #c9d1d9;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #58a6ff;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #58a6ff;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #79c0ff;
+            font-size: 1.4rem;
+            margin: 20px 0 15px 0;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .inline-code {
+            background: #30363d;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            color: #f92672;
+            font-size: 0.9em;
+        }
+
+        .highlight {
+            background: #21262d;
+            border: 1px solid #f85149;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .highlight-title {
+            font-weight: bold;
+            color: #f85149;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #21262d;
+            color: #c9d1d9;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #30363d;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #0969da;
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #21262d;
+        }
+
+        .ts-keyword {
+            color: #ff7b72;
+        }
+
+        .ts-string {
+            color: #a5d6ff;
+        }
+
+        .ts-number {
+            color: #79c0ff;
+        }
+
+        .ts-comment {
+            color: #8b949e;
+            font-style: italic;
+        }
+
+        .footer {
+            background: #0d1117;
+            padding: 20px;
+            text-align: center;
+            color: #8b949e;
+            border-top: 1px solid #30363d;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #0969da;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📘 Types e Type Annotations</h1>
+            <p>Fundamentos do Sistema de Tipos do TypeScript</p>
+        </div>
+
+        <div class="content">
+            <!-- Introdução -->
+            <div class="section">
+                <h2>🎯 O que são Types?</h2>
+                <p>
+                    <strong>Types (tipos)</strong> são uma forma de classificar e categorizar diferentes valores em TypeScript.
+                    Eles definem que tipo de dados uma variável pode armazenar e quais operações podem ser realizadas com ela.
+                </p>
+                
+                <div class="highlight">
+                    <div class="highlight-title">🔍 Por que usar tipos?</div>
+                    <ul>
+                        <li><strong>Detecção de erros:</strong> Identifica problemas em tempo de compilação</li>
+                        <li><strong>Autocompletar:</strong> Melhora a experiência de desenvolvimento</li>
+                        <li><strong>Documentação:</strong> Torna o código mais legível e compreensível</li>
+                        <li><strong>Refatoração:</strong> Facilita mudanças seguras no código</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Type Annotations -->
+            <div class="section">
+                <h2>✏️ O que são Type Annotations?</h2>
+                <p>
+                    <strong>Type Annotations</strong> são anotações explícitas que informam ao TypeScript qual o tipo de uma variável,
+                    parâmetro de função ou valor de retorno. São escritas usando dois pontos (<span class="inline-code">:</span>) seguido do tipo.
+                </p>
+
+                <div class="code-block">
+<span class="ts-comment">// Sintaxe básica: variável: tipo = valor</span>
+<span class="ts-keyword">let</span> nome: <span class="ts-keyword">string</span> = <span class="ts-string">"João"</span>;
+<span class="ts-keyword">let</span> idade: <span class="ts-keyword">number</span> = <span class="ts-number">25</span>;
+<span class="ts-keyword">let</span> ativo: <span class="ts-keyword">boolean</span> = <span class="ts-keyword">true</span>;
+                </div>
+            </div>
+
+            <!-- Tipos Primitivos -->
+            <div class="section">
+                <h2>🧱 Tipos Primitivos</h2>
+                
+                <h3>1. String <span class="badge">Texto</span></h3>
+                <div class="code-block">
+<span class="ts-keyword">let</span> nome: <span class="ts-keyword">string</span> = <span class="ts-string">"Maria"</span>;
+<span class="ts-keyword">let</span> sobrenome: <span class="ts-keyword">string</span> = <span class="ts-string">'Silva'</span>;
+<span class="ts-keyword">let</span> template: <span class="ts-keyword">string</span> = <span class="ts-string">`Olá, ${nome}!`</span>;
+                </div>
+
+                <h3>2. Number <span class="badge">Números</span></h3>
+                <div class="code-block">
+<span class="ts-keyword">let</span> idade: <span class="ts-keyword">number</span> = <span class="ts-number">30</span>;
+<span class="ts-keyword">let</span> altura: <span class="ts-keyword">number</span> = <span class="ts-number">1.75</span>;
+<span class="ts-keyword">let</span> temperatura: <span class="ts-keyword">number</span> = <span class="ts-number">-5</span>;
+<span class="ts-keyword">let</span> hex: <span class="ts-keyword">number</span> = <span class="ts-number">0xFF</span>;
+                </div>
+
+                <h3>3. Boolean <span class="badge">Verdadeiro/Falso</span></h3>
+                <div class="code-block">
+<span class="ts-keyword">let</span> ativo: <span class="ts-keyword">boolean</span> = <span class="ts-keyword">true</span>;
+<span class="ts-keyword">let</span> concluido: <span class="ts-keyword">boolean</span> = <span class="ts-keyword">false</span>;
+<span class="ts-keyword">let</span> resultado: <span class="ts-keyword">boolean</span> = idade > <span class="ts-number">18</span>;
+                </div>
+
+                <h3>4. Array <span class="badge">Listas</span></h3>
+                <div class="code-block">
+<span class="ts-comment">// Duas formas de declarar arrays</span>
+<span class="ts-keyword">let</span> numeros: <span class="ts-keyword">number</span>[] = [<span class="ts-number">1</span>, <span class="ts-number">2</span>, <span class="ts-number">3</span>, <span class="ts-number">4</span>];
+<span class="ts-keyword">let</span> nomes: <span class="ts-keyword">Array</span>&lt;<span class="ts-keyword">string</span>&gt; = [<span class="ts-string">"Ana"</span>, <span class="ts-string">"João"</span>, <span class="ts-string">"Pedro"</span>];
+
+<span class="ts-comment">// Array misto (não recomendado)</span>
+<span class="ts-keyword">let</span> misto: (<span class="ts-keyword">string</span> | <span class="ts-keyword">number</span>)[] = [<span class="ts-string">"texto"</span>, <span class="ts-number">42</span>];
+                </div>
+            </div>
+
+            <!-- Inferência vs Anotação -->
+            <div class="section">
+                <h2>🤖 Inferência de Tipos vs Type Annotations</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Inferência de Tipos</th>
+                            <th>Type Annotations Explícitas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TypeScript determina o tipo automaticamente</td>
+                            <td>Você especifica o tipo explicitamente</td>
+                        </tr>
+                        <tr>
+                            <td><code>let nome = "João";</code></td>
+                            <td><code>let nome: string = "João";</code></td>
+                        </tr>
+                        <tr>
+                            <td>Mais conciso</td>
+                            <td>Mais explícito e documentado</td>
+                        </tr>
+                        <tr>
+                            <td>Bom para casos óbvios</td>
+                            <td>Bom para APIs e contratos</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Exemplos Práticos:</h3>
+                <div class="code-block">
+<span class="ts-comment">// Inferência automática - TypeScript "deduz" o tipo</span>
+<span class="ts-keyword">let</span> produto = <span class="ts-string">"Notebook"</span>; <span class="ts-comment">// string</span>
+<span class="ts-keyword">let</span> preco = <span class="ts-number">2500.99</span>; <span class="ts-comment">// number</span>
+<span class="ts-keyword">let</span> disponivel = <span class="ts-keyword">true</span>; <span class="ts-comment">// boolean</span>
+
+<span class="ts-comment">// Anotação explícita - você define o tipo</span>
+<span class="ts-keyword">let</span> categoria: <span class="ts-keyword">string</span> = <span class="ts-string">"Eletrônicos"</span>;
+<span class="ts-keyword">let</span> desconto: <span class="ts-keyword">number</span> = <span class="ts-number">0.15</span>;
+<span class="ts-keyword">let</span> promocao: <span class="ts-keyword">boolean</span> = <span class="ts-keyword">false</span>;
+                </div>
+            </div>
+
+            <!-- Função com Types -->
+            <div class="section">
+                <h2>🔧 Funções com Type Annotations</h2>
+                
+                <div class="code-block">
+<span class="ts-comment">// Parâmetros e retorno tipados</span>
+<span class="ts-keyword">function</span> somar(a: <span class="ts-keyword">number</span>, b: <span class="ts-keyword">number</span>): <span class="ts-keyword">number</span> {
+    <span class="ts-keyword">return</span> a + b;
+}
+
+<span class="ts-comment">// Arrow function</span>
+<span class="ts-keyword">const</span> multiplicar = (x: <span class="ts-keyword">number</span>, y: <span class="ts-keyword">number</span>): <span class="ts-keyword">number</span> => x * y;
+
+<span class="ts-comment">// Função sem retorno (void)</span>
+<span class="ts-keyword">function</span> exibirMensagem(texto: <span class="ts-keyword">string</span>): <span class="ts-keyword">void</span> {
+    console.log(texto);
+}
+
+<span class="ts-comment">// Parâmetro opcional</span>
+<span class="ts-keyword">function</span> cumprimentar(nome: <span class="ts-keyword">string</span>, sobrenome?: <span class="ts-keyword">string</span>): <span class="ts-keyword">string</span> {
+    <span class="ts-keyword">return</span> sobrenome ? <span class="ts-string">`Olá, ${nome} ${sobrenome}!`</span> : <span class="ts-string">`Olá, ${nome}!`</span>;
+}
+                </div>
+            </div>
+
+            <!-- Tipos Especiais -->
+            <div class="section">
+                <h2>⭐ Tipos Especiais</h2>
+                
+                <h3>Any <span class="badge">Qualquer tipo</span></h3>
+                <div class="code-block">
+<span class="ts-comment">// ⚠️ Evite usar 'any' - remove as verificações de tipo</span>
+<span class="ts-keyword">let</span> valor: <span class="ts-keyword">any</span> = <span class="ts-number">42</span>;
+valor = <span class="ts-string">"texto"</span>; <span class="ts-comment">// OK, mas não é recomendado</span>
+valor = <span class="ts-keyword">true</span>; <span class="ts-comment">// OK, mas perigoso</span>
+                </div>
+
+                <h3>Unknown <span class="badge">Tipo seguro desconhecido</span></h3>
+                <div class="code-block">
+<span class="ts-comment">// Mais seguro que 'any' - requer verificação</span>
+<span class="ts-keyword">let</span> entrada: <span class="ts-keyword">unknown</span> = <span class="ts-string">"dados do usuário"</span>;
+
+<span class="ts-keyword">if</span> (<span class="ts-keyword">typeof</span> entrada === <span class="ts-string">"string"</span>) {
+    console.log(entrada.toUpperCase()); <span class="ts-comment">// OK após verificação</span>
+}
+                </div>
+
+                <h3>Never <span class="badge">Nunca retorna</span></h3>
+                <div class="code-block">
+<span class="ts-comment">// Função que nunca retorna (erro ou loop infinito)</span>
+<span class="ts-keyword">function</span> erro(mensagem: <span class="ts-keyword">string</span>): <span class="ts-keyword">never</span> {
+    <span class="ts-keyword">throw new</span> Error(mensagem);
+}
+                </div>
+            </div>
+
+            <!-- Dicas e Boas Práticas -->
+            <div class="section">
+                <h2>💡 Dicas e Boas Práticas</h2>
+                
+                <div class="highlight">
+                    <div class="highlight-title">✅ Faça</div>
+                    <ul>
+                        <li>Use inferência de tipos quando o tipo for óbvio</li>
+                        <li>Sempre type parâmetros de função</li>
+                        <li>Seja explícito em APIs públicas</li>
+                        <li>Use tipos específicos em vez de <code>any</code></li>
+                    </ul>
+                </div>
+
+                <div class="highlight">
+                    <div class="highlight-title">❌ Evite</div>
+                    <ul>
+                        <li>Anotações redundantes quando a inferência funciona</li>
+                        <li>Usar <code>any</code> desnecessariamente</li>
+                        <li>Tipos muito complexos sem necessidade</li>
+                        <li>Ignorar warnings do TypeScript</li>
+                    </ul>
+                </div>
+
+                <h3>Exemplo de Boas Práticas:</h3>
+                <div class="code-block">
+<span class="ts-comment">// ✅ Bom: inferência clara</span>
+<span class="ts-keyword">const</span> usuario = {
+    id: <span class="ts-number">1</span>,
+    nome: <span class="ts-string">"Ana"</span>,
+    email: <span class="ts-string">"ana@email.com"</span>
+};
+
+<span class="ts-comment">// ✅ Bom: parâmetros sempre tipados</span>
+<span class="ts-keyword">function</span> buscarUsuario(id: <span class="ts-keyword">number</span>) {
+    <span class="ts-comment">// Lógica de busca...</span>
+    <span class="ts-keyword">return</span> usuario;
+}
+
+<span class="ts-comment">// ❌ Ruim: any desnecessário</span>
+<span class="ts-keyword">let</span> dados: <span class="ts-keyword">any</span> = <span class="ts-string">"texto"</span>; <span class="ts-comment">// Poderia ser inferido</span>
+
+<span class="ts-comment">// ❌ Ruim: anotação redundante</span>
+<span class="ts-keyword">let</span> numero: <span class="ts-keyword">number</span> = <span class="ts-number">42</span>; <span class="ts-comment">// TypeScript já sabe que é number</span>
+                </div>
+            </div>
+
+            <!-- Exercícios -->
+            <div class="section">
+                <h2>🏋️ Exercícios Práticos</h2>
+                
+                <h3>1. Corrija os tipos nas variáveis abaixo:</h3>
+                <div class="code-block">
+<span class="ts-comment">// Adicione type annotations apropriadas</span>
+<span class="ts-keyword">let</span> nome = <span class="ts-string">"Pedro"</span>;
+<span class="ts-keyword">let</span> idade = <span class="ts-number">28</span>;
+<span class="ts-keyword">let</span> hobbies = [<span class="ts-string">"futebol"</span>, <span class="ts-string">"leitura"</span>, <span class="ts-string">"programação"</span>];
+<span class="ts-keyword">let</span> endereco = {
+    rua: <span class="ts-string">"Rua das Flores, 123"</span>,
+    cidade: <span class="ts-string">"São Paulo"</span>,
+    cep: <span class="ts-string">"01234-567"</span>
+};
+                </div>
+
+                <h3>2. Crie uma função tipada:</h3>
+                <div class="code-block">
+<span class="ts-comment">// Crie uma função que calcule a área de um retângulo</span>
+<span class="ts-comment">// Parâmetros: largura (number), altura (number)</span>
+<span class="ts-comment">// Retorno: number</span>
+
+<span class="ts-keyword">function</span> calcularArea(/* seus parâmetros aqui */) {
+    <span class="ts-comment">// sua implementação aqui</span>
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📚 <strong>Nota de Aula:</strong> Types e Type Annotations em TypeScript</p>
+            <p>Formação Full Stack - Rocketseat | Módulo TypeScript</p>
+        </div>
+    </div>
+</body>
+</html>
